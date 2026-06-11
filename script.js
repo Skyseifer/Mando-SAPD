@@ -357,12 +357,12 @@ function generarPatrullaje(){
     const unidad = document.getElementById("patUnidad").value;
     const oficial1 = document.getElementById("patOficial1").value;
     const oficial2 = document.getElementById("patOficial2").value;
-    
+    const ubicacion = document.getElementById("patUbicacion").value;
+
     const mensaje =
-`/r ${unidad} conformado por ${oficial1} y ${oficial2}, inician 10-33 desde la 10.20 de la 15va de Vinewood, Good Service.`;
+        `/r ${unidad} conformado por ${oficial1} y ${oficial2}, inician 10-33 desde ${ubicacion}, Good Service.`;
 
-    mostrarVistaPrevia(mensaje);
-
+    document.getElementById("vistaPrevia").value = mensaje;
 }
 
 function generarSAMS(){
