@@ -144,38 +144,35 @@
     <option value="586">586 - Estacionamiento Ilegal</option>
     <option value="254 V">254 V - Persecución Vehicular</option>
     <option value="254 P">254 P - Conducción Temeraria</option>
-    <option value="CÓDIGO 12">CÓDIGO 12 - Falsa Alarma</option>
-    <option value="CÓDIGO 37">CÓDIGO 37 - Vehículo Robado</option>
+    <option value="CODIGO 12">CODIGO 12 - Falsa Alarma</option>
+    <option value="CODIGO 37">CODIGO 37 - Vehículo Robado</option>
 
 </select>
 
 <div class="com-grid">
 
-        <div class="com-grid">
+    <button class="com-btn" onclick="generar488()">
+        🚨 Interna
+    </button>
 
-            <button class="com-btn" onclick="generar488()">
-                🚨 Interna
-            </button>
+    <button class="com-btn"
+        onclick="copiarMensaje('/r 10-98 del último 488, sujeto en 10.15 | procedemos con el 10-25 para posterior 10-95')">
+        👮 Sujeto Detenido
+    </button>
 
-            <button class="com-btn"
-                onclick="copiarMensaje('/r 10-98 del último 488, sujeto en 10.15 | procedemos con el 10-25 para posterior 10-95')">
-                👮 Sujeto Detenido
-            </button>
+    <button class="com-btn" onclick="generarCodigo4()">
+        ✅ Código 4
+    </button>
 
-            <button class="com-btn" onclick="generarCodigo4()">
-    ✅ Código 4
-</button>
+    <button class="com-btn" onclick="generarSinExito()">
+        ❌ Sin Éxito
+    </button>
 
-<button class="com-btn" onclick="generarSinExito()">
-    ❌ Sin Éxito
-</button>
+    <button class="com-btn" onclick="generarRetomar()">
+        🚔 Retomar Patrullaje
+    </button>
 
-<button class="com-btn" onclick="generarRetomar()">
-    🚔 Retomar Patrullaje
-</button>
-</button>
-
-        </div>
+</div>
 
     </div>
 
