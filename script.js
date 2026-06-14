@@ -443,13 +443,25 @@ function generarRetomar(){
     );
 
 }
-function toggleDetalleNegociacion(){
+function generarNegociacion(){
+
+    const tipo =
+        document.getElementById("tipoNegociacion").value;
 
     const lugar =
         document.getElementById("lugarNegociacion").value;
 
-    const campo =
-        document.getElementById("detalleNegociacion");
+    const detalle =
+        document.getElementById("detalleNegociacion").value;
+
+    const hora =
+        new Date().toLocaleTimeString("es-CL", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+        });
+
+    let mensaje = "";
 
     if(
         lugar === "24/7" ||
@@ -457,42 +469,12 @@ function toggleDetalleNegociacion(){
         lugar === "Ammu-Nation" ||
         lugar === "Robo a Casa"
     ){
-
-        campo.style.display = "block";
-
+        mensaje =
+            `/r Se informa el ${tipo} de negociaciones en ${lugar} de ${detalle} a las ${hora}`;
     }else{
-
-        campo.style.display = "none";
-        campo.value = "";
-
+        mensaje =
+            `/r Se informa el ${tipo} de negociaciones en ${lugar} a las ${hora}`;
     }
 
-}
-
-function toggleDetalleNegociacion(){
-
-    alert("Funciona");
-
-    const lugar =
-        document.getElementById("lugarNegociacion").value;
-
-    const campo =
-        document.getElementById("detalleNegociacion");
-
-    if(
-        lugar === "24/7" ||
-        lugar === "LTD" ||
-        lugar === "Ammu-Nation" ||
-        lugar === "Robo a Casa"
-    ){
-
-        campo.style.display = "block";
-
-    }else{
-
-        campo.style.display = "none";
-        campo.value = "";
-
-    }
-
+    mostrarVistaPrevia(mensaje);
 }
