@@ -443,3 +443,69 @@ function generarRetomar(){
     );
 
 }
+function toggleDetalleNegociacion(){
+
+    const lugar =
+        document.getElementById("lugarNegociacion").value;
+
+    const campo =
+        document.getElementById("detalleNegociacion");
+
+    if(
+        lugar === "24/7" ||
+        lugar === "LTD" ||
+        lugar === "Ammu-Nation" ||
+        lugar === "Robo a Casa"
+    ){
+
+        campo.style.display = "block";
+
+    }else{
+
+        campo.style.display = "none";
+        campo.value = "";
+
+    }
+
+}
+
+function generarNegociacion(){
+
+    const tipo =
+        document.getElementById("tipoNegociacion").value;
+
+    const lugar =
+        document.getElementById("lugarNegociacion").value;
+
+    const detalle =
+        document.getElementById("detalleNegociacion").value;
+
+    const hora =
+        new Date().toLocaleTimeString("es-CL", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+        });
+
+    let mensaje = "";
+
+    if(
+        lugar === "24/7" ||
+        lugar === "LTD" ||
+        lugar === "Ammu-Nation" ||
+        lugar === "Robo a Casa"
+    ){
+
+        mensaje =
+            `/r Se informa el ${tipo} de negociaciones en ${lugar} de ${detalle} a las ${hora}`;
+
+    }else{
+
+        mensaje =
+            `/r Se informa el ${tipo} de negociaciones en ${lugar} a las ${hora}`;
+
+    }
+
+    mostrarVistaPrevia(mensaje);
+
+}
