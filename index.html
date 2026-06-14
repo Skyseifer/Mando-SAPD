@@ -179,15 +179,59 @@
     <!-- VISTA PREVIA -->
 
     <div class="panel">
-    <h2>📋 Vista Previa</h2>
 
-    <textarea id="vistaPrevia" readonly></textarea>
+        <h2>📋 Vista Previa</h2>
 
-    <button class="com-btn" onclick="copiarVistaPrevia()">
-        📋 Copiar Mensaje
-    </button>
+        <textarea id="vistaPrevia" readonly></textarea>
 
-</div>
+        <button class="com-btn" onclick="copiarVistaPrevia()">
+            📋 Copiar Mensaje
+        </button>
+
+    </div>
+
+    <!-- NEGOCIACIONES -->
+
+    <div class="panel">
+
+        <h2>🤝 Negociaciones</h2>
+
+        <select id="tipoNegociacion">
+            <option value="termino">Término de Negociaciones</option>
+            <option value="corte">Corte de Negociaciones</option>
+        </select>
+
+        <select id="lugarNegociacion" onchange="toggleDetalleNegociacion()">
+
+            <option value="">Seleccione un robo</option>
+
+            <option value="24/7">24/7</option>
+            <option value="LTD">LTD</option>
+            <option value="Ammu-Nation">Ammu-Nation</option>
+            <option value="Robo a Casa">Robo a Casa</option>
+
+            <option value="Barco de Drogas">Barco de Drogas</option>
+            <option value="Joyeria Vangelico">Joyeria Vangelico</option>
+            <option value="Artifacts">Artifacts</option>
+            <option value="Yate">Yate</option>
+            <option value="Tren Merryweather">Tren Merryweather</option>
+            <option value="Banco Paleto">Banco Paleto</option>
+            <option value="Union Depository">Union Depository</option>
+
+        </select>
+
+        <input
+            type="text"
+            id="detalleNegociacion"
+            placeholder="Ubicación específica"
+            style="display:none;"
+        >
+
+        <button class="com-btn" onclick="generarNegociacion()">
+            📋 Generar Mensaje
+        </button>
+
+    </div>
 
     <!-- PATRULLAJE -->
 
