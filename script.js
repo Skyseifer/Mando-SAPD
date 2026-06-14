@@ -476,12 +476,12 @@ function generarNegociacion(){
     ){
 
         mensaje =
-            `/r Se informa el ${textoTipo} de negociaciones en ${lugar} de ${detalle} a las ${hora}`;
+            `/lspd Se informa el ${textoTipo} de negociaciones en ${lugar} de ${detalle} a las ${hora}`;
 
     }else{
 
         mensaje =
-            `/r Se informa el ${textoTipo} de negociaciones en ${lugar} a las ${hora}`;
+            `/lspd Se informa el ${textoTipo} de negociaciones en ${lugar} a las ${hora}`;
 
     }
 
