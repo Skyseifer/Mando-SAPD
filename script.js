@@ -469,25 +469,15 @@ function toggleDetalleNegociacion(){
 
 }
 
-function generarNegociacion(){
+function toggleDetalleNegociacion(){
 
-    const tipo =
-        document.getElementById("tipoNegociacion").value;
+    alert("Funciona");
 
     const lugar =
         document.getElementById("lugarNegociacion").value;
 
-    const detalle =
-        document.getElementById("detalleNegociacion").value;
-
-    const hora =
-        new Date().toLocaleTimeString("es-CL", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false
-        });
-
-    let mensaje = "";
+    const campo =
+        document.getElementById("detalleNegociacion");
 
     if(
         lugar === "24/7" ||
@@ -496,16 +486,13 @@ function generarNegociacion(){
         lugar === "Robo a Casa"
     ){
 
-        mensaje =
-            `/r Se informa el ${tipo} de negociaciones en ${lugar} de ${detalle} a las ${hora}`;
+        campo.style.display = "block";
 
     }else{
 
-        mensaje =
-            `/r Se informa el ${tipo} de negociaciones en ${lugar} a las ${hora}`;
+        campo.style.display = "none";
+        campo.value = "";
 
     }
-
-    mostrarVistaPrevia(mensaje);
 
 }
