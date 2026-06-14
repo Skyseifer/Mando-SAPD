@@ -424,3 +424,11 @@ select{
 .panel-incautados{
     margin-top:px;
 }
+select{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:6px;
+    box-sizing:border-box;
+    margin-bottom:10px;
+}
