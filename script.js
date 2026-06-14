@@ -463,18 +463,28 @@ function generarNegociacion(){
 
     let mensaje = "";
 
+    const textoTipo =
+        tipo === "termino"
+            ? "término"
+            : "corte";
+
     if(
         lugar === "24/7" ||
         lugar === "LTD" ||
         lugar === "Ammu-Nation" ||
         lugar === "Robo a Casa"
     ){
+
         mensaje =
-            `/r Se informa el ${tipo} de negociaciones en ${lugar} de ${detalle} a las ${hora}`;
+            `/r Se informa el ${textoTipo} de negociaciones en ${lugar} de ${detalle} a las ${hora}`;
+
     }else{
+
         mensaje =
-            `/r Se informa el ${tipo} de negociaciones en ${lugar} a las ${hora}`;
+            `/r Se informa el ${textoTipo} de negociaciones en ${lugar} a las ${hora}`;
+
     }
 
     mostrarVistaPrevia(mensaje);
+
 }
