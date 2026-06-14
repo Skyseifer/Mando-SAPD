@@ -411,3 +411,35 @@ function generarIncautados(){
     copiarMensaje(mensaje);
 
 }
+function generarCodigo4(){
+
+    const codigo =
+        document.getElementById("codigoEvento").value;
+
+    copiarMensaje(
+        `/r 10-97 del ${codigo} | Cod.4`
+    );
+
+}
+
+function generarSinExito(){
+
+    const codigo =
+        document.getElementById("codigoEvento").value;
+
+    copiarMensaje(
+        `/r 10-98 al último ${codigo}, sin éxito | Procedemos con 10-22`
+    );
+
+}
+
+function generarRetomar(){
+
+    const codigo =
+        document.getElementById("codigoEvento").value;
+
+    copiarMensaje(
+        `/r 10-98 del último ${codigo} | Retomamos 10-33`
+    );
+
+}
