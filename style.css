@@ -364,7 +364,7 @@ textarea{
     padding: 4px 8px !important;
     font-size: 13px !important;
     margin-top: -4px;
-    margin-bottom: 8px;
+    margin-bottom: 12px !important;
     border: 1px solid #2563eb !important; /* Borde azul para notar que se está editando */
 }
 
