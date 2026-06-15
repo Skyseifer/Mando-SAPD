@@ -520,7 +520,8 @@ function actualizarSelectLugaresPatrulla(seleccionarLugar = "") {
     if (!select) return;
 
     // Comparte la misma lista de ubicaciones que usas en los robos
-    const lugares = JSON.parse(localStorage.getItem("lista_lugares_robo")) || ["Joyería Vangelico"];
+    const lugares = JSON.parse(localStorage.getItem("lista_ubicaciones_patrulla")) || ["15va Comisaria de Vinewood"];
+    const seleccionado = seleccionarLugar || "";
 
     let html = '<option value="">🗺️ Seleccionar Ubicación / Base</option>';
     lugares.forEach(lug => {
