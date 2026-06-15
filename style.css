@@ -436,12 +436,6 @@ select{
 /* COMUNICACIONES COMPACTO */
 /* ========================= */
 
-#comunicaciones{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-
 #comunicaciones .panel{
     margin-bottom:0;
     padding:10px;
@@ -478,17 +472,6 @@ select{
 
 /* Responsive */
 
-@media(max-width:900px){
-
-    #comunicaciones{
-        grid-template-columns:1fr;
-    }
-
-    #comunicaciones .panel:nth-child(2){
-        grid-column:auto;
-    }
-
-}
 .com-layout{
     display:grid;
     grid-template-columns:1fr 1fr;
