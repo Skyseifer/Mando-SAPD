@@ -1,7 +1,7 @@
 const patrullas = [
     "ADAM 10", "ADAM 20", "ADAM 30", "ADAM 40",
     "ADAM 50", "ADAM 60", "ADAM 70", "ADAM 80",
-    "MERIT 01", "MERIT 02", "MERIT 03", "MERIT 04", "MERIT 05"
+    "MERIT 01", "MERIT 02", "MERIT 03"
 ];
 
 /* ========================================= */
