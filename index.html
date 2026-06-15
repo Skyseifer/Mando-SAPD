@@ -34,6 +34,17 @@
                 </div>
             </div>
 
+            <div class="panel" style="margin-bottom: 20px;">
+                <h2 style="margin-top:0; font-size:18px;">📢 Anuncios Estatales (Ciudadanía)</h2>
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
+                    <label style="font-size: 14px; font-weight: bold; color: #fff;">Tu ID (1 al 100):</label>
+                    <input type="number" id="anuncioId" min="1" max="100" placeholder="Ej: 42" style="width: 100px; margin: 0; padding: 6px; background: #1f2937; border: 1px solid #374151; color: #fff; border-radius: 4px;">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button class="com-btn" style="background:#16a34a; margin:0; padding: 10px; border:none; color:white; border-radius:4px; cursor:pointer; font-weight:bold;" onclick="generarAnuncioDisponibles()">🟢 Anunciar Disponibles</button>
+                    <button class="com-btn" style="background:#b91c1c; margin:0; padding: 10px; border:none; color:white; border-radius:4px; cursor:pointer; font-weight:bold;" onclick="generarAnuncioNoDisponibles()">🔴 Anunciar No Disponibles</button>
+                </div>
+            </div>
             <div class="layout-principal">
                 <div class="columna">
                     <div class="panel">
@@ -42,7 +53,7 @@
                             <button class="btn-reiniciar" onclick="reiniciarUnidades()">🔄 Reiniciar Turno</button>
                         </div>
                         <div id="listaPatrullas">
-                            </div>
+                        </div>
                     </div>
                 </div>
 
