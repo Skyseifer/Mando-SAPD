@@ -177,34 +177,45 @@
                     </div>
                 </div>
 
-                <div class="com-col-flex">
+<div class="com-col-flex">
                     <div class="panel">
                         <h2>🚙 Inicio de Patrullaje</h2>
+                        
                         <select id="patUnidad">
                             <option value="">Seleccione una unidad...</option>
-                            <option value="ADAM 10">Lincoln 10</option>
+                            <option value="LINCOLN 10">Lincoln 10</option>
                             <option value="ADAM 10">ADAM 10</option>
-                            <option value="ADAM 10">Lincoln 20</option>
+                            <option value="LINCOLN 20">Lincoln 20</option>
                             <option value="ADAM 20">ADAM 20</option>
-                            <option value="ADAM 10">Lincoln 30</option>
+                            <option value="LINCOLN 30">Lincoln 30</option>
                             <option value="ADAM 30">ADAM 30</option>
-                            <option value="ADAM 10">Lincoln 40</option>
+                            <option value="LINCOLN 40">Lincoln 40</option>
                             <option value="ADAM 40">ADAM 40</option>
-                            <option value="ADAM 10">Lincoln 50</option>
+                            <option value="LINCOLN 50">Lincoln 50</option>
                             <option value="ADAM 50">ADAM 50</option>
-                            <option value="ADAM 10">Lincoln 60</option>
+                            <option value="LINCOLN 60">Lincoln 60</option>
                             <option value="ADAM 60">ADAM 60</option>
-                            <option value="ADAM 10">Lincoln 70</option>
+                            <option value="LINCOLN 70">Lincoln 70</option>
                             <option value="ADAM 70">ADAM 70</option>
-                            <option value="ADAM 10">Lincoln 80</option>
+                            <option value="LINCOLN 80">Lincoln 80</option>
                             <option value="ADAM 80">ADAM 80</option>
                             <option value="MERIT 01">MERIT 01</option>
                             <option value="MERIT 02">MERIT 02</option>
                             <option value="MERIT 03">MERIT 03</option>
                         </select>
-                        <input type="text" id="patOficial1" placeholder="Oficial de mayor rango">
-                        <input type="text" id="patOficial2" placeholder="Segundo oficial (Opcional)">
-                        <input type="text" id="patUbicacion" placeholder="Ubicación de inicio / Base">
+
+                        <select id="patOficial1Select" onchange="verificarNuevoOficialPatrulla(1)">
+                            </select>
+                        <input type="text" id="patOficial1Nuevo" placeholder="✍️ Escribe el nombre del Oficial 1..." style="display: none;">
+
+                        <select id="patOficial2Select" onchange="verificarNuevoOficialPatrulla(2)">
+                            </select>
+                        <input type="text" id="patOficial2Nuevo" placeholder="✍️ Escribe el nombre del Oficial 2..." style="display: none;">
+
+                        <select id="patUbicacionSelect" onchange="verificarNuevoLugarPatrulla()">
+                            </select>
+                        <input type="text" id="patUbicacionNuevo" placeholder="✍️ Escribe la nueva ubicación..." style="display: none;">
+
                         <button class="com-btn" onclick="generarPatrullaje()">🚀 Despachar Patrulla</button>
                     </div>
 
