@@ -240,7 +240,7 @@ function actualizarSelectLugares(seleccionarLugar = "") {
     const lugares = obtenerLugaresGuardados();
     const ultimoSeleccionado = seleccionarLugar || localStorage.getItem("ultimo_lugar_robo") || lugares[0];
 
-    let html = '<option value="">-- Selecciona Ubicación / Lugar --</option>';
+    let html = '<option value="">🗺️ Seleccionar Ubicación/ Lugar --</option>';
     lugares.forEach(lug => {
         html += `<option value="${lug}" ${lug === ultimoSeleccionado ? "selected" : ""}>📍 ${lug}</option>`;
     });
