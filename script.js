@@ -469,3 +469,15 @@ function generarNegociacion(tipoAccion){
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }
+
+function generarAnuncioGo(){
+    const lugar = document.getElementById("lugarNegociacion").value;
+    
+    if(!lugar) return alert("Debe seleccionar un robo de la lista antes de enviar el GO.");
+
+    // Estructura el mensaje final con el lugar seleccionado
+    const mensaje = `/lspd GO ${lugar}`;
+
+    mostrarVistaPrevia(mensaje);
+    copiarMensaje(mensaje);
+}
