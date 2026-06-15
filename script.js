@@ -194,10 +194,18 @@ function generarPatrullaje(){
     mostrarVistaPrevia(mensaje);
 }
 
-function generarSAMS(){
+function generarSAMS(tipoPaciente){
     const elPaciente = document.getElementById("estadoPaciente");
     const estado = elPaciente ? elPaciente.value : "Estable";
-    mostrarVistaPrevia(`/rff Solicitamos un Alfa en nuestro 10-20 para tratar a un sujeto/agente en estado ${estado}`);
+    
+    // Define dinámicamente el texto según el botón presionado
+    const stringPaciente = tipoPaciente === "agente" ? "un agente" : "un sujeto";
+
+    const mensaje = `/rff Solicitamos un Alfa en nuestro 10-20 para tratar a ${stringPaciente} en estado ${estado}`;
+    
+    mostrarVistaPrevia(mensaje);
+    copiarMensaje(mensaje); // Lo copia directo al portapapeles para ahorrar tiempo
+}
 }
 
 function generarIncautados(){
