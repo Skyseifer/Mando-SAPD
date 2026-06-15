@@ -156,6 +156,7 @@ function copiarMensaje(texto){
     .catch(() => { alert("Error al copiar automáticamente."); });
 }
 
+/* Copia lo que esté actualmente en el cuadro central verde */
 function copiarVistaPrevia(){
     const texto = document.getElementById("vistaPrevia").value;
     if(!texto) return alert("No hay mensaje estructurado.");
@@ -198,14 +199,12 @@ function generarSAMS(tipoPaciente){
     const elPaciente = document.getElementById("estadoPaciente");
     const estado = elPaciente ? elPaciente.value : "Estable";
     
-    // Define dinámicamente el texto según el botón presionado
+    // Determina si es civil (sujeto) o policía (agente)
     const stringPaciente = tipoPaciente === "agente" ? "un agente" : "un sujeto";
 
     const mensaje = `/rff Solicitamos un Alfa en nuestro 10-20 para tratar a ${stringPaciente} en estado ${estado}`;
-    
     mostrarVistaPrevia(mensaje);
-    copiarMensaje(mensaje); // Lo copia directo al portapapeles para ahorrar tiempo
-}
+    copiarMensaje(mensaje);
 }
 
 function generarIncautados(){
@@ -259,7 +258,7 @@ function generarNegociacion(tipoAccion){
     
     if(!lugar) return alert("Debe seleccionar un robo de la lista.");
 
-    // Captura de hora exacta en formato 24 horas (HH:MM)
+    // Captura de hora exacta del sistema en formato 24 horas (HH:MM)
     const ahora = new Date();
     const horaExacta = String(ahora.getHours()).padStart(2, '0') + ":" + String(ahora.getMinutes()).padStart(2, '0');
     
