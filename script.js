@@ -210,7 +210,12 @@ function generarSAMS(tipoPaciente){
 function generarIncautados(){
     const nombre = document.getElementById("incautadoNombre").value || "[Sujeto]";
     const objetos = document.getElementById("incautadoObjetos").value || "[Objetos]";
-    const mensaje = `/r ${nombre} | ${objetos} | Procesado por: Tobias Bismarck`;
+    const objetos = document.getElementById("incautadoOficial").value || "[Oficial]";
+
+    if(oficial && oficial !== "[Oficial]") {
+        localStorage.setItem("ultimo_oficial_incautador", oficial);
+    }    
+    const mensaje = `/r ${nombre} | ${objetos} | Procesado por: ${oficial}`;
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }
