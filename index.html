@@ -120,15 +120,36 @@
             <input type="text" id="roboVestimenta" placeholder="Vestimenta">
             <input type="text" id="roboArmas" placeholder="Armamento">
             
-            <button class="com-btn" style="background:#2563eb; margin-bottom:10px;" onclick="generar488()">📋 Generar Reporte 488</button>
+            <button class="com-btn" style="background:#2563eb; margin-bottom:12px;" onclick="generar488()">📋 Generar Reporte General</button>
             
+            <label style="font-size:12px; color:#9ca3af; display:block; margin-bottom:4px;">Seleccione Clave del Evento:</label>
+            <select id="codigoEvento">
+                <option value="148">148 | Resistencia al arresto</option>
+                <option value="187">187 | Homicidio</option>
+                <option value="207">207 | Secuestro</option>
+                <option value="208">208 | Disparos</option>
+                <option value="211">211 | Robo a mano Armada</option>
+                <option value="215">215 | Tiroteo en Curso</option>
+                <option value="242">242 | Agresion</option>
+                <option value="320">320 | Venta de Drogas</option>
+                <option value="415">415 | Disturbios</option>
+                <option value="417">417 | Sujeto Armado</option>
+                <option value="487">487 | Robo Mayor</option>
+                <option value="488" selected>488 | Robo Menor</option>
+                <option value="505">505 | Conduccion Temeraria</option>
+                <option value="510">510 | Carrera o Exceso de Velocidad</option>
+                <option value="586">586 | Estacionamiento Ilegal</option>
+                <option value="254 V">254 V | Persecución Vehicular</option>
+                <option value="254 P">254 P | Conduccion Temeraria (P)</option>
+                <option value="CÓDIGO 12">CÓDIGO 12 | Falsa Alarma</option>
+                <option value="CÓDIGO 37">CÓDIGO 37 | Vehiculo Robado</option>
+            </select>
+
             <div class="com-grid">
                 <button class="com-btn" style="background:#1e3a8a;" onclick="generarCodigo4()">🟢 Cód. 4</button>
                 <button class="com-btn" style="background:#991b1b;" onclick="generarSinExito()">🔴 Sin Éxito</button>
                 <button class="com-btn" style="background:#15803d; grid-column: span 2;" onclick="generarRetomar()">🚔 Retomar Patrullaje</button>
             </div>
-            
-            <input type="text" id="codigoEvento" placeholder="Código de Evento / Incidente (Ej: 488, 207...)" style="margin-top:10px; height:28px;">
         </div>
 
         <div class="com-col-flex">
@@ -141,20 +162,27 @@
 
             <div class="panel">
                 <h2>🤝 Negociaciones</h2>
-                <select id="tipoNegociacion">
-                    <option value="termino">Término de Negociaciones</option>
-                    <option value="corte">Corte de Negociaciones</option>
-                </select>
                 <select id="lugarNegociacion" onchange="toggleDetalleNegociacion()">
-                    <option value="">Seleccione tipo de robo...</option>
-                    <option value="24/7">Robo 24/7</option>
-                    <option value="LTD">Robo LTD</option>
+                    <option value="">Seleccione el tipo de robo...</option>
+                    <option value="24/7">24/7</option>
+                    <option value="LTD">LTD</option>
                     <option value="Ammu-Nation">Ammu-Nation</option>
                     <option value="Robo a Casa">Robo a Casa</option>
-                    <option value="Banco">Banco Principal</option>
+                    <option value="Barco de Drogas">Barco de Drogas</option>
+                    <option value="Joyeria Vangelico">Joyeria Vangelico</option>
+                    <option value="Artifacts">Artifacts</option>
+                    <option value="Yate">Yate</option>
+                    <option value="Tren Merryweather">Tren Merryweather</option>
+                    <option value="Banco Paleto">Banco Paleto</option>
+                    <option value="Union Depository">Union Depository</option>
                 </select>
-                <input type="text" id="detalleNegociacion" placeholder="Sucursal o ubicación (24/7, LTD, etc)" style="display:none;">
-                <button class="com-btn" onclick="generarNegociacion()">Generar Mensaje</button>
+                
+                <input type="text" id="detalleNegociacion" placeholder="Escriba la ubicación exacta o número de sucursal" style="display:none;">
+                
+                <div class="com-grid">
+                    <button class="com-btn" style="background:#2563eb;" onclick="generarNegociacion('termino')">🛑 Término</button>
+                    <button class="com-btn" style="background:#b91c1c;" onclick="generarNegociacion('corte')">💥 Corte</button>
+                </div>
             </div>
 
             <div class="panel">
