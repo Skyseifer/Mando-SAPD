@@ -19,7 +19,6 @@ function actualizarReloj(){
     }
 }
 setInterval(actualizarReloj, 1000);
-actualizarReloj();
 
 /* ========================================= */
 /* PESTAÑAS (TABS) */
@@ -40,15 +39,16 @@ function mostrarPestana(id){
 }
 
 /* ========================================= */
-/* ACORDEON (MANUAL) */
+/* INICIALIZACIÓN Y PERSISTENCIA (DOM) */
 /* ========================================= */
 document.addEventListener("DOMContentLoaded", () => {
     actualizarReloj();
     renderizarPatrullas();
     toggleDetalleNegociacion();
 
-    const botones = document.querySelectorAll(".acordeon-btn");
-    botones.forEach(boton => {
+    // Inicializar acordeón del manual
+    const botonesAcordeon = document.querySelectorAll(".acordeon-btn");
+    botonesAcordeon.forEach(boton => {
         boton.addEventListener("click", () => {
             const contenido = boton.nextElementSibling;
             if(contenido.style.display === "block"){
@@ -58,10 +58,35 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    // Cargar Notas Guardadas
+    const notas = document.getElementById("notas");
+    if(notas){
+        notas.value = localStorage.getItem("notas") || "";
+        notas.addEventListener("input", () => localStorage.setItem("notas", notas.value));
+    }
+
+    // Cargar Canales TAC Guardados
+    ["tac1","tac2","tac3","tac4","tac5"].forEach(id => {
+        const campo = document.getElementById(id);
+        if(campo) {
+            campo.value = localStorage.getItem(id) || "";
+            campo.addEventListener("input", () => localStorage.setItem(id, campo.value));
+        }
+    });
+
+    // Cargar el último oficial de incautaciones guardado
+    const campoOficial = document.getElementById("incautadoOficial");
+    if(campoOficial){
+        campoOficial.value = localStorage.getItem("ultimo_oficial_incautador") || "";
+        campoOficial.addEventListener("input", () => {
+            localStorage.setItem("ultimo_oficial_incautador", campoOficial.value);
+        });
+    }
 });
 
 /* ========================================= */
-/* ESTADO UNIDADES & CACHÉ */
+/* CONTROL DE FLOTA OPERATIVA */
 /* ========================================= */
 function cambiarEstado(nombre){
     const estadoActual = localStorage.getItem(nombre + "_estado") === "true";
@@ -115,9 +140,14 @@ function renderizarPatrullas(){
     contenedor.innerHTML += crearGrupo("ADAM", adam);
     contenedor.innerHTML += crearGrupo("MERIT", merit);
 
-    document.getElementById("disponibles").innerText = disponibles;
-    document.getElementById("nodisponibles").innerText = patrullas.length - disponibles;
-    document.getElementById("oficialesDisponibles").innerText = oficialesDisponibles;
+    // Actualizar tarjetas de estadísticas de la pestaña Operaciones
+    const elDisp = document.getElementById("disponibles");
+    const elNoDisp = document.getElementById("nodisponibles");
+    const elOfi = document.getElementById("oficialesDisponibles");
+
+    if(elDisp) elDisp.innerText = disponibles;
+    if(elNoDisp) elNoDisp.innerText = patrullas.length - disponibles;
+    if(elOfi) elOfi.innerText = oficialesDisponibles;
 }
 
 function reiniciarUnidades(){
@@ -129,21 +159,8 @@ function reiniciarUnidades(){
     renderizarPatrullas();
 }
 
-/* Persistencia campos de texto */
-const notas = document.getElementById("notas");
-if(notas){
-    notas.value = localStorage.getItem("notas") || "";
-    notas.addEventListener("input", () => localStorage.setItem("notas", notas.value));
-}
-["tac1","tac2","tac3","tac4","tac5"].forEach(id => {
-    const campo = document.getElementById(id);
-    if(!campo) return;
-    campo.value = localStorage.getItem(id) || "";
-    campo.addEventListener("input", () => localStorage.setItem(id, campo.value));
-});
-
 /* ========================================= */
-/* GENERADORES DE REPORTES RADIALES */
+/* REPOSITORIO DE FUNCIONES AUXILIARES */
 /* ========================================= */
 function mostrarVistaPrevia(texto){
     const vp = document.getElementById("vistaPrevia");
@@ -156,13 +173,15 @@ function copiarMensaje(texto){
     .catch(() => { alert("Error al copiar automáticamente."); });
 }
 
-/* Copia lo que esté actualmente en el cuadro central verde */
 function copiarVistaPrevia(){
     const texto = document.getElementById("vistaPrevia").value;
     if(!texto) return alert("No hay mensaje estructurado.");
     copiarMensaje(texto);
 }
 
+/* ========================================= */
+/* GENERADORES DE COMUNICADOS RADIALES */
+/* ========================================= */
 function generar488(){
     const lugar = document.getElementById("roboLugar").value || "[Lugar]";
     const vehiculo = document.getElementById("roboVehiculo").value || "[Vehículo]";
@@ -198,8 +217,6 @@ function generarPatrullaje(){
 function generarSAMS(tipoPaciente){
     const elPaciente = document.getElementById("estadoPaciente");
     const estado = elPaciente ? elPaciente.value : "Estable";
-    
-    // Determina si es civil (sujeto) o policía (agente)
     const stringPaciente = tipoPaciente === "agente" ? "un agente" : "un sujeto";
 
     const mensaje = `/rff Solicitamos un Alfa en nuestro 10-20 para tratar a ${stringPaciente} en estado ${estado}`;
@@ -210,18 +227,19 @@ function generarSAMS(tipoPaciente){
 function generarIncautados(){
     const nombre = document.getElementById("incautadoNombre").value || "[Sujeto]";
     const objetos = document.getElementById("incautadoObjetos").value || "[Objetos]";
-    const objetos = document.getElementById("incautadoOficial").value || "[Oficial]";
-
+    const oficial = document.getElementById("incautadoOficial").value || "[Oficial]";
+    
     if(oficial && oficial !== "[Oficial]") {
         localStorage.setItem("ultimo_oficial_incautador", oficial);
-    }    
+    }
+
     const mensaje = `/r ${nombre} | ${objetos} | Procesado por: ${oficial}`;
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }
 
 /* ========================================= */
-/* ACCIONES RÁPIDAS (SOLO EXTRAE NÚMERO) */
+/* ACCIONES RÁPIDAS (CLAVES RADIALES) */
 /* ========================================= */
 function generarCodigo4(){
     const codigo = document.getElementById("codigoEvento").value;
@@ -252,7 +270,6 @@ function toggleDetalleNegociacion() {
     const detalle = document.getElementById('detalleNegociacion');
     if(!lugar || !detalle) return;
 
-    // Solo estos robos habilitan el campo de escritura libre
     const condicionales = ["24/7", "LTD", "Ammu-Nation", "Robo a Casa"];
     detalle.style.display = condicionales.includes(lugar.value) ? "block" : "none";
 }
@@ -263,7 +280,6 @@ function generarNegociacion(tipoAccion){
     
     if(!lugar) return alert("Debe seleccionar un robo de la lista.");
 
-    // Captura de hora exacta del sistema en formato 24 horas (HH:MM)
     const ahora = new Date();
     const horaExacta = String(ahora.getHours()).padStart(2, '0') + ":" + String(ahora.getMinutes()).padStart(2, '0');
     
