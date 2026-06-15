@@ -35,7 +35,7 @@ h1{
 }
 
 #logoApp {
-    max-height: 55px; /* Tamaño compacto e integrado con el diseño */
+    max-height: 65px; /* Tamaño compacto e integrado con el diseño */
     width: auto;
     object-fit: contain;
 }
