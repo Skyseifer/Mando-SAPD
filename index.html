@@ -108,216 +108,101 @@
 <!-- COMUNICACIONES -->
 
 <div id="comunicaciones" class="tab-content">
-    
     <div class="com-layout">
+        
+        <div class="panel">
+            <h2>🚨 Radio Interna Robos</h2>
+            <input type="text" id="roboLugar" placeholder="Lugar del robo">
+            <input type="text" id="roboVehiculo" placeholder="Vehículo">
+            <input type="text" id="roboColor" placeholder="Color">
+            <input type="text" id="roboPatente" placeholder="Patente">
+            <input type="number" id="roboAtracadores" placeholder="Cantidad de atracadores">
+            <input type="text" id="roboVestimenta" placeholder="Vestimenta">
+            <input type="text" id="roboArmas" placeholder="Armamento">
+            
+            <button class="com-btn" style="background:#2563eb; margin-bottom:10px;" onclick="generar488()">📋 Generar Reporte 488</button>
+            
+            <div class="com-grid">
+                <button class="com-btn" style="background:#1e3a8a;" onclick="generarCodigo4()">🟢 Cód. 4</button>
+                <button class="com-btn" style="background:#991b1b;" onclick="generarSinExito()">🔴 Sin Éxito</button>
+                <button class="com-btn" style="background:#15803d; grid-column: span 2;" onclick="generarRetomar()">🚔 Retomar Patrullaje</button>
+            </div>
+            
+            <input type="text" id="codigoEvento" placeholder="Código de Evento / Incidente (Ej: 488, 207...)" style="margin-top:10px; height:28px;">
+        </div>
 
-    <!-- ROBOS -->
+        <div class="com-col-flex">
+            
+            <div class="panel">
+                <h2>📋 Vista Previa del Mensaje</h2>
+                <textarea id="vistaPrevia" placeholder="El texto estructurado se mostrará aquí..." readonly></textarea>
+                <button class="com-btn" style="background:#16a34a;" onclick="copiarVistaPrevia()">💾 Copiar al Portapapeles</button>
+            </div>
 
-    <div class="panel">
+            <div class="panel">
+                <h2>🤝 Negociaciones</h2>
+                <select id="tipoNegociacion">
+                    <option value="termino">Término de Negociaciones</option>
+                    <option value="corte">Corte de Negociaciones</option>
+                </select>
+                <select id="lugarNegociacion" onchange="toggleDetalleNegociacion()">
+                    <option value="">Seleccione tipo de robo...</option>
+                    <option value="24/7">Robo 24/7</option>
+                    <option value="LTD">Robo LTD</option>
+                    <option value="Ammu-Nation">Ammu-Nation</option>
+                    <option value="Robo a Casa">Robo a Casa</option>
+                    <option value="Banco">Banco Principal</option>
+                </select>
+                <input type="text" id="detalleNegociacion" placeholder="Sucursal o ubicación (24/7, LTD, etc)" style="display:none;">
+                <button class="com-btn" onclick="generarNegociacion()">Generar Mensaje</button>
+            </div>
 
-<h2>🚨 Radio Interna Robos</h2>
+            <div class="panel">
+                <h2>🚑 Solicitud a SAMS</h2>
+                <select id="estadoPaciente">
+                    <option value="Estable">Sujeto Estable / Consciente</option>
+                    <option value="Inconsciente">Sujeto Inconsciente (K.O.)</option>
+                    <option value="Herido de Bala">Herido de Bala (Código 3)</option>
+                    <option value="Crítico">Estado Crítico / Reanimación</option>
+                </select>
+                <button class="com-btn" style="background:#dc2626;" onclick="generarSAMS()">🚑 Solicitar Unidad SAMS</button>
+            </div>
+        </div>
 
-<input type="text" id="roboLugar" placeholder="Lugar del robo">
-<input type="text" id="roboVehiculo" placeholder="Vehículo">
-<input type="text" id="roboColor" placeholder="Color">
-<input type="text" id="roboPatente" placeholder="Patente">
-<input type="number" id="roboAtracadores" placeholder="Cantidad de atracadores">
-<input type="text" id="roboVestimenta" placeholder="Vestimenta">
-<input type="text" id="roboArmas" placeholder="Armamento">
+        <div class="com-col-flex">
+            
+            <div class="panel">
+                <h2>🚙 Inicio de Patrullaje</h2>
+                <select id="patUnidad">
+                    <option value="">Seleccione una unidad...</option>
+                    <option value="ADAM 10">ADAM 10</option>
+                    <option value="ADAM 20">ADAM 20</option>
+                    <option value="ADAM 30">ADAM 30</option>
+                    <option value="ADAM 40">ADAM 40</option>
+                    <option value="ADAM 50">ADAM 50</option>
+                    <option value="ADAM 60">ADAM 60</option>
+                    <option value="ADAM 70">ADAM 70</option>
+                    <option value="ADAM 80">ADAM 80</option>
+                    <option value="MERIT 01">MERIT 01</option>
+                    <option value="MERIT 02">MERIT 02</option>
+                    <option value="MERIT 03">MERIT 03</option>
+                </select>
+                <input type="text" id="patOficial1" placeholder="Oficial de mayor rango">
+                <input type="text" id="patOficial2" placeholder="Segundo oficial (Opcional)">
+                <input type="text" id="patUbicacion" placeholder="Ubicación de inicio / Base">
+                <button class="com-btn" onclick="generarPatrullaje()">🚀 Despachar Patrulla</button>
+            </div>
 
-<!-- NUEVO LISTADO -->
+            <div class="panel">
+                <h2>📦 Objetos Incautados</h2>
+                <input type="text" id="incautadoNombre" placeholder="Nombre del procesado">
+                <input type="text" id="incautadoObjetos" placeholder="Objetos (Ej: 1x AK47, 50x Marihuana)">
+                <button class="com-btn" style="background:#1d4ed8;" onclick="generarIncautados()">📦 Registrar Incautación</button>
+            </div>
+        </div>
 
-<select id="codigoEvento">
-
-    <option value="148">148 - Resistencia al Arresto</option>
-    <option value="187">187 - Homicidio</option>
-    <option value="207">207 - Secuestro</option>
-    <option value="208">208 - Disparos</option>
-    <option value="211">211 - Robo a Mano Armada</option>
-    <option value="215">215 - Tiroteo en Curso</option>
-    <option value="242">242 - Agresión</option>
-    <option value="320">320 - Venta de Drogas</option>
-    <option value="415">415 - Disturbios</option>
-    <option value="417">417 - Sujeto Armado</option>
-    <option value="487">487 - Robo Mayor</option>
-    <option value="488">488 - Robo Menor</option>
-    <option value="505">505 - Conducción Temeraria</option>
-    <option value="510">510 - Carrera o Exceso de Velocidad</option>
-    <option value="586">586 - Estacionamiento Ilegal</option>
-    <option value="254 V">254 V - Persecución Vehicular</option>
-    <option value="254 P">254 P - Conducción Temeraria</option>
-    <option value="CODIGO 12">CODIGO 12 - Falsa Alarma</option>
-    <option value="CODIGO 37">CODIGO 37 - Vehículo Robado</option>
-
-</select>
-
-<div class="com-grid">
-
-    <button class="com-btn" onclick="generar488()">
-        🚨 Interna
-    </button>
-
-    <button class="com-btn"
-        onclick="copiarMensaje('/r 10-98 del último 488, sujeto en 10.15 | procedemos con el 10-25 para posterior 10-95')">
-        👮 Sujeto Detenido
-    </button>
-
-    <button class="com-btn" onclick="generarCodigo4()">
-        ✅ Código 4
-    </button>
-
-    <button class="com-btn" onclick="generarSinExito()">
-        ❌ Sin Éxito
-    </button>
-
-    <button class="com-btn" onclick="generarRetomar()">
-        🚔 Retomar Patrullaje
-    </button>
-
+    </div>
 </div>
-
-    </div>
-
-    <!-- VISTA PREVIA -->
-
-    <div class="panel">
-
-        <h2>📋 Vista Previa</h2>
-
-        <textarea id="vistaPrevia" readonly></textarea>
-
-        <button class="com-btn" onclick="copiarVistaPrevia()">
-            📋 Copiar Mensaje
-        </button>
-
-    </div>
-
-    <!-- NEGOCIACIONES -->
-
-    <div class="panel">
-
-        <h2>🤝 Negociaciones</h2>
-
-        <select id="tipoNegociacion">
-            <option value="termino">Término de Negociaciones</option>
-            <option value="corte">Corte de Negociaciones</option>
-        </select>
-
-        <select id="lugarNegociacion" onchange="toggleDetalleNegociacion()">
-
-            <option value="">Seleccione un robo</option>
-
-            <option value="24/7">24/7</option>
-            <option value="LTD">LTD</option>
-            <option value="Ammu-Nation">Ammu-Nation</option>
-            <option value="Robo a Casa">Robo a Casa</option>
-
-            <option value="Barco de Drogas">Barco de Drogas</option>
-            <option value="Joyeria Vangelico">Joyeria Vangelico</option>
-            <option value="Artifacts">Artifacts</option>
-            <option value="Yate">Yate</option>
-            <option value="Tren Merryweather">Tren Merryweather</option>
-            <option value="Banco Paleto">Banco Paleto</option>
-            <option value="Union Depository">Union Depository</option>
-
-        </select>
-
-        <input
-            type="text"
-            id="detalleNegociacion"
-            placeholder="Sucursal / Ubicación (solo para 24/7, LTD, Ammu-Nation o Robo a Casa)"
-        >
-
-        <button class="com-btn" onclick="generarNegociacion()">
-            📋 Generar Mensaje
-        </button>
-
-    </div>
-
-    <!-- PATRULLAJE -->
-
-    <div class="panel">
-
-        <h2>🚓 Inicio de Patrullaje</h2>
-
-<select id="patUnidad">
-
-    <option value="">Seleccione una unidad</option>
-
-    <option value="ADAM 10">ADAM 10</option>
-    <option value="ADAM 20">ADAM 20</option>
-    <option value="ADAM 30">ADAM 30</option>
-    <option value="ADAM 40">ADAM 40</option>
-    <option value="ADAM 50">ADAM 50</option>
-    <option value="ADAM 60">ADAM 60</option>
-    <option value="ADAM 70">ADAM 70</option>
-    <option value="ADAM 80">ADAM 80</option>
-
-    <option value="LINCOLN 10">LINCOLN 10</option>
-    <option value="LINCOLN 20">LINCOLN 20</option>
-    <option value="LINCOLN 30">LINCOLN 30</option>
-    <option value="LINCOLN 40">LINCOLN 40</option>
-    <option value="LINCOLN 50">LINCOLN 50</option>
-    <option value="LINCOLN 60">LINCOLN 60</option>
-    <option value="LINCOLN 70">LINCOLN 70</option>
-    <option value="LINCOLN 80">LINCOLN 80</option>
-    
-    <option value="MERIT 01">MERIT 01</option>
-    <option value="MERIT 02">MERIT 02</option>
-    <option value="MERIT 03">MERIT 03</option>
-    <option value="MERIT 04">MERIT 04</option>
-    <option value="MERIT 05">MERIT 05</option>
-
-</select>
-        <input type="text" id="patOficial1" placeholder="Oficial de mayor rango">
-        <input type="text" id="patOficial2" placeholder="Segundo oficial">
-        <input type="text" id="patUbicacion" placeholder="Ubicación de inicio">
-    
-        <button class="com-btn" onclick="generarPatrullaje()">
-            📻 Generar Inicio de Patrullaje
-        </button>
-
-    </div>
-
-<!-- SAMS -->
-
-<div class="panel">
-
-    <h2>🚑 Solicitud a SAMS</h2>
-
-    <button class="com-btn"
-        onclick="copiarMensaje('/rff Solicitamos una unidad en nuestro 10-20 para tratar a [cambiar] en estado PH')">
-        📻 Solicitar Unidad SAMS
-    </button>
-
-</div>
-
-<!-- OBJETOS INCAUTADOS -->
-
-<div class="panel">
-
-    <h2>📦 Objetos Incautados</h2>
-
-    <input
-        type="text"
-        id="incautadoNombre"
-        placeholder="Nombre del procesado">
-
-    <input
-        type="text"
-        id="incautadoObjetos"
-        placeholder="Objetos procesados">
-
-<button class="com-btn"
-    onclick="generarIncautados()">
-    📋 Generar Registro
-</button>
-
-</div> <!-- panel Objetos Incautados -->
-
-</div> <!-- com-layout -->
-
-</div> <!-- comunicaciones -->
 
 <!-- MANUAL -->
 
