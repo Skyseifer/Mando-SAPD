@@ -599,7 +599,7 @@ function generarPatrullaje() {
     if (!ubicacion) return alert("Debe seleccionar una ubicación de inicio.");
 
     const oficialesMensaje = oficial2 ? `${oficial1} | ${oficial2}` : oficial1;
-    const mensaje = `/r Unidad ${unidad} constituida por: ${oficialesMensaje} inicia patrullaje en ${ubicacion} | 10-8`;
+    const mensaje = `/r Unidad ${unidad} constituida por: ${oficialesMensaje} inicia patrullaje en ${ubicacion} | Good Service.`;
     
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
