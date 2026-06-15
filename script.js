@@ -193,7 +193,7 @@ function generar488(){
     const armas = document.getElementById("roboArmas").value || "[Armamento]";
     const codigo = document.getElementById("codigoEvento").value;
 
-    const mensaje = `/r 10-97 al ${codigo} del lugar ${lugar} | V: ${vehiculo} C: ${color} Matricula: ${patente} COD-37 | Atracadores: ${atracadores} Vestimenta: ${vestimenta} Portan: ${armas} | R: ${rehenes}`;
+    const mensaje = `/r 10-97 al ${codigo} del lugar ${lugar} | V: ${vehiculo} C: ${color} Matricula: ${patente} COD-37 | Atracadores: ${atracadores} Vestimenta: ${vestimenta} Portan: ${armas} | Rehenes: ${rehenes}`;
     mostrarVistaPrevia(mensaje);
 }
 
