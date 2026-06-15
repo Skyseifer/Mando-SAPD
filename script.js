@@ -188,11 +188,12 @@ function generar488(){
     const color = document.getElementById("roboColor").value || "[Color]";
     const patente = document.getElementById("roboPatente").value || "[Patente]";
     const atracadores = document.getElementById("roboAtracadores").value || "?";
+    const rehenes = document.getElementById("roboRehenes").value || "0";
     const vestimenta = document.getElementById("roboVestimenta").value || "[Vestimenta]";
     const armas = document.getElementById("roboArmas").value || "[Armamento]";
     const codigo = document.getElementById("codigoEvento").value;
 
-    const mensaje = `/r 10-97 al ${codigo} del lugar ${lugar} | V: ${vehiculo} C: ${color} Matricula: ${patente} COD-37 | Atracadores: ${atracadores} Vestimenta: ${vestimenta} Portan: ${armas}`;
+    const mensaje = `/r 10-97 al ${codigo} del lugar ${lugar} | V: ${vehiculo} C: ${color} Matricula: ${patente} COD-37 | Atracadores: ${atracadores} Vestimenta: ${vestimenta} Portan: ${armas} | R: ${rehenes}`;
     mostrarVistaPrevia(mensaje);
 }
 
