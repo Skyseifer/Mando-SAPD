@@ -230,7 +230,7 @@ function verificarNuevoOficial() {
 function obtenerLugaresGuardados() {
     const lista = localStorage.getItem("lista_lugares_robo");
     // Algunos lugares por defecto para iniciar la lista
-    return lista ? JSON.parse(lista) : ["Joyería Vangelico", "Banco Central", "Comisaría Central", "Tienda de Ropa"];
+    return lista ? JSON.parse(lista) : ["Joyería Vangelico", "Artifact", "Barco de Drogas", "Yate", "Tren Merryweather", "Banco Paleto", "Union Depository",];
 }
 
 function actualizarSelectLugares(seleccionarLugar = "") {
