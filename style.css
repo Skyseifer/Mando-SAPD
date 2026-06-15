@@ -213,6 +213,11 @@ input, select{
     color:white;
 }
 
+/* MODIFICACIÓN: Forzar siempre mayúsculas visuales en la patente */
+#roboPatente {
+    text-transform: uppercase;
+}
+
 /* ========================= */
 /* NOTAS */
 /* ========================= */
@@ -350,6 +355,17 @@ textarea{
     margin-bottom: 8px;
     font-size: 13px;
     border: 1px solid #374151;
+}
+
+/* NUEVO: Estilo adaptado para los inputs ocultos de "Agregar nuevo..." para que mantengan la estética compacta */
+#roboLugarNuevo,
+#incautadoOficialNuevo {
+    height: 32px !important;
+    padding: 4px 8px !important;
+    font-size: 13px !important;
+    margin-top: -4px;
+    margin-bottom: 8px;
+    border: 1px solid #2563eb !important; /* Borde azul para notar que se está editando */
 }
 
 #comunicaciones input:focus,
