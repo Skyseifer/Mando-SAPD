@@ -302,7 +302,7 @@ function generar488(){
 
     const vehiculo = document.getElementById("roboVehiculo").value || "[Vehículo]";
     const color = document.getElementById("roboColor").value || "[Color]";
-    const patente = document.getElementById("roboPatente").value || "[Patente]";
+    const patente = (document.getElementById("roboPatente").value || "[Patente]").toUpperCase();
     const atracadores = document.getElementById("roboAtracadores").value || "?";
     const rehenes = document.getElementById("roboRehenes").value || "0";
     const vestimenta = document.getElementById("roboVestimenta").value || "[Vestimenta]";
