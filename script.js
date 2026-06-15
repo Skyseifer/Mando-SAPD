@@ -45,7 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarReloj();
     renderizarPatrullas();
     toggleDetalleNegociacion();
-    
+    actualizarSelectOficialesPatrulla(1);
+    actualizarSelectOficialesPatrulla(2);
+    actualizarSelectLugaresPatrulla();
+  
     // Inicializar selectores dinámicos
     actualizarSelectOficiales(); 
     actualizarSelectLugares(); // NUEVO: Inicializa el selector dinámico de lugares de robo
@@ -480,4 +483,129 @@ function generarAnuncioGo(){
 
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
+}
+
+
+// ========================================================
+// SISTEMA DE LISTADOS DINÁMICOS PARA INICIO DE PATRULLA
+// ========================================================
+
+function actualizarSelectOficialesPatrulla(numeroOficial, seleccionarOficial = "") {
+    const select = document.getElementById(`patOficial${numeroOficial}Select`);
+    if (!select) return;
+
+    // Comparte la misma lista de oficiales que usas en incautaciones
+    const oficiales = JSON.parse(localStorage.getItem("lista_oficiales_incautadores")) || ["Eduardo Vinicius"];
+    
+    let html = `<option value="">👮‍♂️ Seleccionar Oficial ${numeroOficial} ${numeroOficial === 2 ? '(Opcional)' : ''}</option>`;
+    oficiales.forEach(oficial => {
+        html += `<option value="${oficial}" ${oficial === seleccionarOficial ? "selected" : ""}>🔹 ${oficial}</option>`;
+    });
+    html += `<option value="__NUEVO__">✍️ Agregar nuevo oficial...</option>`;
+
+    select.innerHTML = html;
+    verificarNuevoOficialPatrulla(numeroOficial);
+}
+
+function verificarNuevoOficialPatrulla(numeroOficial) {
+    const select = document.getElementById(`patOficial${numeroOficial}Select`);
+    const inputNuevo = document.getElementById(`patOficial${numeroOficial}Nuevo`);
+    if (select && inputNuevo) {
+        inputNuevo.style.display = select.value === "__NUEVO__" ? "block" : "none";
+    }
+}
+
+function actualizarSelectLugaresPatrulla(seleccionarLugar = "") {
+    const select = document.getElementById("patUbicacionSelect");
+    if (!select) return;
+
+    // Comparte la misma lista de ubicaciones que usas en los robos
+    const lugares = JSON.parse(localStorage.getItem("lista_lugares_robo")) || ["Joyería Vangelico"];
+
+    let html = '<option value="">🗺️ Seleccionar Ubicación / Base</option>';
+    lugares.forEach(lug => {
+        html += `<option value="${lug}" ${lug === seleccionarLugar ? "selected" : ""}>📍 ${lug}</option>`;
+    });
+    html += '<option value="__NUEVO__">✍️ Agregar nueva ubicación...</option>';
+
+    select.innerHTML = html;
+    verificarNuevoLugarPatrulla();
+}
+
+function verificarNuevoLugarPatrulla() {
+    const select = document.getElementById("patUbicacionSelect");
+    const inputNuevo = document.getElementById("patUbicacionNuevo");
+    if (select && inputNuevo) {
+        inputNuevo.style.display = select.value === "__NUEVO__" ? "block" : "none";
+    }
+}
+
+function generarPatrullaje() {
+    const unidad = document.getElementById("patUnidad").value || "[Unidad]";
+    
+    // --- Procesar Oficial 1 ---
+    const selectOf1 = document.getElementById("patOficial1Select");
+    let oficial1 = selectOf1 ? selectOf1.value : "";
+    if (oficial1 === "__NUEVO__") {
+        const nuevoOf1 = document.getElementById("patOficial1Nuevo").value.trim();
+        if (!nuevoOf1) return alert("Por favor, escribe el nombre del Oficial 1.");
+        
+        let lista = JSON.parse(localStorage.getItem("lista_oficiales_incautadores")) || ["Eduardo Vinicius"];
+        if (!lista.includes(nuevoOf1)) {
+            lista.push(nuevoOf1);
+            lista.sort();
+            localStorage.setItem("lista_oficiales_incautadores", JSON.stringify(lista));
+            if(typeof actualizarSelectOficiales === 'function') actualizarSelectOficiales();
+        }
+        oficial1 = nuevoOf1;
+    }
+
+    // --- Procesar Oficial 2 ---
+    const selectOf2 = document.getElementById("patOficial2Select");
+    let oficial2 = selectOf2 ? selectOf2.value : "";
+    if (oficial2 === "__NUEVO__") {
+        const nuevoOf2 = document.getElementById("patOficial2Nuevo").value.trim();
+        if (!nuevoOf2) return alert("Por favor, escribe el nombre del Oficial 2.");
+        
+        let lista = JSON.parse(localStorage.getItem("lista_oficiales_incautadores")) || ["Eduardo Vinicius"];
+        if (!lista.includes(nuevoOf2)) {
+            lista.push(nuevoOf2);
+            lista.sort();
+            localStorage.setItem("lista_oficiales_incautadores", JSON.stringify(lista));
+            if(typeof actualizarSelectOficiales === 'function') actualizarSelectOficiales();
+        }
+        oficial2 = nuevoOf2;
+    }
+
+    // --- Procesar Ubicación ---
+    const selectUbi = document.getElementById("patUbicacionSelect");
+    let ubicacion = selectUbi ? selectUbi.value : "";
+    if (ubicacion === "__NUEVO__") {
+        const nuevaUbi = document.getElementById("patUbicacionNuevo").value.trim();
+        if (!nuevaUbi) return alert("Por favor, escribe la nueva ubicación.");
+        
+        let lista = JSON.parse(localStorage.getItem("lista_lugares_robo")) || ["Joyería Vangelico"];
+        if (!lista.includes(nuevaUbi)) {
+            lista.push(nuevaUbi);
+            lista.sort();
+            localStorage.setItem("lista_lugares_robo", JSON.stringify(lista));
+            if(typeof actualizarSelectLugares === 'function') actualizarSelectLugares();
+        }
+        ubicacion = nuevaUbi;
+    }
+
+    if (!oficial1) return alert("Debe seleccionar al menos el Oficial de mayor rango.");
+    if (!ubicacion) return alert("Debe seleccionar una ubicación de inicio.");
+
+    const oficialesMensaje = oficial2 ? `${oficial1} | ${oficial2}` : oficial1;
+    const mensaje = `/r [MANDO] Unidad ${unidad} constituida por: ${oficialesMensaje} inicia patrullaje en ${ubicacion} | 10-8`;
+    
+    mostrarVistaPrevia(mensaje);
+    copiarMensaje(mensaje);
+
+    // Resetear formulario
+    document.getElementById("patUnidad").value = "";
+    actualizarSelectOficialesPatrulla(1, "");
+    actualizarSelectOficialesPatrulla(2, "");
+    actualizarSelectLugaresPatrulla("");
 }
