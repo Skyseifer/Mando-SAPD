@@ -12,7 +12,9 @@ const patrullas = [
 
     "MERIT 01",
     "MERIT 02",
-    "MERIT 03"
+    "MERIT 03",
+    "MERIT 04",
+    "MERIT 05",
 
 ];
 
