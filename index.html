@@ -186,16 +186,19 @@
             </div>
 
             <div class="panel">
-                <h2>🚑 Solicitud a SAMS</h2>
-                <select id="estadoPaciente">
-                    <option value="Estable">Sujeto Estable / Consciente</option>
-                    <option value="Inconsciente">Sujeto Inconsciente (K.O.)</option>
-                    <option value="Herido de Bala">Herido de Bala (Código 3)</option>
-                    <option value="Crítico">Estado Crítico / Reanimación</option>
-                </select>
-                <button class="com-btn" style="background:#dc2626;" onclick="generarSAMS()">🚑 Solicitar Unidad SAMS</button>
-            </div>
-        </div>
+    <h2>🚑 Solicitud a SAMS</h2>
+    <select id="estadoPaciente">
+        <option value="Estable">Estable / Consciente</option>
+        <option value="Inconsciente" selected>Inconsciente (K.O.)</option>
+        <option value="Herido de Bala">Herido de Bala (Código 3)</option>
+        <option value="Crítico">Estado Crítico / Reanimación</option>
+    </select>
+    
+    <div class="com-grid">
+        <button class="com-btn" style="background:#2563eb;" onclick="generarSAMS('sujeto')">🧍 Un Sujeto</button>
+        <button class="com-btn" style="background:#15803d;" onclick="generarSAMS('agente')">🛡️ Un Agente</button>
+    </div>
+</div>
 
         <div class="com-col-flex">
             
