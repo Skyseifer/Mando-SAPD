@@ -466,7 +466,8 @@ select{
 }
 
 #vistaPrevia{
-    min-height:120px;
+    min-height:80px;
+    max-height:120px;
 }
 
 /* Vista previa ocupa ancho completo */
