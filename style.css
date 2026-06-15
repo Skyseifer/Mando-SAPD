@@ -87,7 +87,7 @@ h1{
 }
 
 /* ========================= */
-/* LAYOUT */
+/* LAYOUT PRINCIPAL (OPERACIONES) */
 /* ========================= */
 
 .layout-principal{
@@ -191,7 +191,7 @@ h1{
 }
 
 /* ========================= */
-/* TAC */
+/* TAC, INPUTS & SELECTS GENERALES */
 /* ========================= */
 
 table{
@@ -202,12 +202,15 @@ td{
     padding:8px;
 }
 
-input{
+input, select{
     width:100%;
     padding:10px;
     border:none;
     border-radius:6px;
     box-sizing:border-box;
+    margin-bottom:10px;
+    background:#111827;
+    color:white;
 }
 
 /* ========================= */
@@ -222,6 +225,8 @@ textarea{
     border-radius:6px;
     resize:vertical;
     box-sizing:border-box;
+    background:#111827;
+    color:white;
 }
 
 /* ========================= */
@@ -261,74 +266,10 @@ textarea{
 }
 
 /* ========================= */
-/* RESPONSIVE */
-/* ========================= */
-
-@media(max-width:1024px){
-
-    .layout-principal{
-        grid-template-columns:1fr;
-    }
-
-    .grupo-unidades{
-        grid-template-columns:repeat(3,1fr);
-    }
-
-}
-
-@media(max-width:768px){
-
-    .estadisticas{
-        flex-direction:column;
-    }
-
-    .grupo-unidades{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .cabecera-unidades{
-        flex-direction:column;
-        gap:10px;
-    }
-
-    .btn-reiniciar{
-        width:100%;
-    }
-
-    .tabs{
-        flex-direction:column;
-    }
-
-}
-.com-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:12px;
-    margin-top:15px;
-}
-
-.com-btn{
-    background:#2563eb;
-    color:white;
-    border:none;
-    border-radius:10px;
-    padding:14px;
-    cursor:pointer;
-    font-size:15px;
-    font-weight:bold;
-    transition:0.2s;
-}
-
-.com-btn:hover{
-    background:#1d4ed8;
-    transform:translateY(-2px);
-}
-/* ========================= */
 /* MODALES */
 /* ========================= */
 
 .modal{
-
     display:none;
     position:fixed;
     top:0;
@@ -339,42 +280,28 @@ textarea{
     justify-content:center;
     align-items:center;
     z-index:9999;
-
 }
 
 .modal-content{
-
     background:#1f2937;
     width:500px;
     max-width:90%;
     padding:25px;
     border-radius:12px;
-
 }
 
 .modal-content h2{
-
     margin-top:0;
     margin-bottom:20px;
-
-}
-
-.modal-content input{
-
-    margin-bottom:10px;
-
 }
 
 .modal-buttons{
-
     display:flex;
     gap:10px;
     margin-top:15px;
-
 }
 
 .btn-cerrar{
-
     background:#dc2626;
     color:white;
     border:none;
@@ -382,108 +309,130 @@ textarea{
     border-radius:8px;
     cursor:pointer;
     flex:1;
+}
 
-}.com-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:10px;
-    margin-top:15px;
+/* ========================= */
+/* DISTRIBUCIÓN COMUNICACIONES (3 COLUMNAS COMPACTAS) */
+/* ========================= */
+
+.com-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1.5fr 1.2fr;
+    gap: 12px;
+    align-items: start;
+}
+
+.com-col-flex {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#comunicaciones .panel{
+    margin-bottom: 0;
+    padding: 12px;
+    background: #1f2937;
+    border-radius: 12px;
+}
+
+#comunicaciones h2{
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #9ca3af;
+}
+
+#comunicaciones input,
+#comunicaciones select{
+    height: 32px;
+    padding: 4px 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    border: 1px solid #374151;
+}
+
+#comunicaciones input:focus,
+#comunicaciones select:focus {
+    border-color: #2563eb;
+    outline: none;
+}
+
+.com-grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-top: 5px;
 }
 
 .com-btn{
-    background:#2563eb;
-    color:white;
-    border:none;
-    border-radius:8px;
-    padding:12px;
-    cursor:pointer;
-    font-weight:bold;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .com-btn:hover{
     background:#1d4ed8;
 }
 
-#comunicaciones .panel{
-    margin-bottom:20px;
-}
-
-#comunicaciones input{
-    margin-bottom:10px;
-}
-
-input,
-select{
-    width:100%;
-    padding:10px;
-    border:none;
-    border-radius:6px;
-    box-sizing:border-box;
-    margin-bottom:10px;
-}
-.panel-incautados{
-    margin-top:px;
-}
-select{
-    width:100%;
-    padding:10px;
-    border:none;
-    border-radius:6px;
-    box-sizing:border-box;
-    margin-bottom:10px;
-}
-/* ========================= */
-/* COMUNICACIONES COMPACTO */
-/* ========================= */
-
-#comunicaciones .panel{
-    margin-bottom:0;
-    padding:10px;
-}
-
-#comunicaciones h2{
-    margin:0 0 8px 0;
-    font-size:16px;
-}
-
-#comunicaciones input,
-#comunicaciones select{
-    height:30px;
-    padding:5px 8px;
-    margin-bottom:5px;
-    font-size:12px;
-}
-
-#comunicaciones .com-btn{
-    padding:8px;
-    font-size:12px;
-}
-
 #vistaPrevia{
-    min-height:80px;
-    max-height:120px;
+    min-height: 75px;
+    max-height: 100px;
+    background: #111827;
+    color: #22c55e;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    border: 1px solid #2563eb;
+    margin-bottom: 8px;
+    padding: 8px;
+    width: 100%;
 }
 
-/* Vista previa ocupa ancho completo */
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
 
-#comunicaciones .panel:nth-child(2){
-    grid-column:1 / span 2;
-}
-
-/* Responsive */
-
-.com-layout{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
-}
-
-.com-full{
-    grid-column:1 / -1;
-}
-
-@media(max-width:900px){
+@media(max-width:1200px){
     .com-layout{
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media(max-width:1024px){
+    .layout-principal{
         grid-template-columns:1fr;
+    }
+    .grupo-unidades{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:768px){
+    .estadisticas{
+        flex-direction:column;
+    }
+    .grupo-unidades{
+        grid-template-columns:repeat(2,1fr);
+    }
+    .cabecera-unidades{
+        flex-direction:column;
+        gap:10px;
+    }
+    .btn-reiniciar{
+        width:100%;
+    }
+    .tabs{
+        flex-direction:column;
+    }
+    .com-layout{
+        grid-template-columns: 1fr;
     }
 }
