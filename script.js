@@ -339,6 +339,7 @@ function generarSAMS(tipoPaciente){
     const mensaje = `/rff Solicitamos un Alfa en nuestro 10-20 para tratar a ${stringPaciente} en estado ${estado}`;
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
+}   
 function solicitarCopiaSAMS() {
     const mensaje = "/rff SAMS me Copia?";
     mostrarVistaPrevia(mensaje);
