@@ -313,9 +313,9 @@ function generarNegociacion(tipoAccion){
 
     let mensaje = "";
     if (condicionales.includes(lugar)) {
-        mensaje = `/r Se informa el ${textoAccion} de negociaciones en ${lugar} de ${detalle || '[Especificar]'} a las ${horaExacta}`;
+        mensaje = `/lspd Se informa el ${textoAccion} de negociaciones en ${lugar} de ${detalle || '[Especificar]'} a las ${horaExacta}`;
     } else {
-        mensaje = `/r Se informa el ${textoAccion} de negociaciones en ${lugar} a las ${horaExacta}`;
+        mensaje = `/lspd Se informa el ${textoAccion} de negociaciones en ${lugar} a las ${horaExacta}`;
     }
 
     mostrarVistaPrevia(mensaje);
