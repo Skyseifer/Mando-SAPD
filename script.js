@@ -210,7 +210,7 @@ function generarSAMS(tipoPaciente){
 function generarIncautados(){
     const nombre = document.getElementById("incautadoNombre").value || "[Sujeto]";
     const objetos = document.getElementById("incautadoObjetos").value || "[Objetos]";
-    const mensaje = `/r "${nombre}" | ${objetos} | Procesado por: Tobias Bismarck`;
+    const mensaje = `/r ${nombre} | ${objetos} | Procesado por: Tobias Bismarck`;
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }
