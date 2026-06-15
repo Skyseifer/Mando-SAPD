@@ -45,7 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarReloj();
     renderizarPatrullas();
     toggleDetalleNegociacion();
-    actualizarSelectOficiales(); // NUEVO: Inicializa el selector dinámico de oficiales
+    
+    // Inicializar selectores dinámicos
+    actualizarSelectOficiales(); 
+    actualizarSelectLugares(); // NUEVO: Inicializa el selector dinámico de lugares de robo
 
     // Inicializar acordeón del manual
     const botonesAcordeon = document.querySelectorAll(".acordeon-btn");
@@ -222,10 +225,81 @@ function verificarNuevoOficial() {
 }
 
 /* ========================================= */
+/* GESTIÓN DINÁMICA DE LUGARES DE ROBO (NUEVO) */
+/* ========================================= */
+function obtenerLugaresGuardados() {
+    const lista = localStorage.getItem("lista_lugares_robo");
+    // Algunos lugares por defecto para iniciar la lista
+    return lista ? JSON.parse(lista) : ["Joyería Vangelico", "Banco Central", "Comisaría Central", "Tienda de Ropa"];
+}
+
+function actualizarSelectLugares(seleccionarLugar = "") {
+    const select = document.getElementById("roboLugarSelect");
+    if (!select) return;
+
+    const lugares = obtenerLugaresGuardados();
+    const ultimoSeleccionado = seleccionarLugar || localStorage.getItem("ultimo_lugar_robo") || lugares[0];
+
+    let html = '<option value="">-- Selecciona Ubicación / Lugar --</option>';
+    lugares.forEach(lug => {
+        html += `<option value="${lug}" ${lug === ultimoSeleccionado ? "selected" : ""}>📍 ${lug}</option>`;
+    });
+    html += '<option value="__NUEVO__">✍️ Agregar nuevo lugar...</option>';
+
+    select.innerHTML = html;
+    verificarNuevoLugar();
+}
+
+function verificarNuevoLugar() {
+    const select = document.getElementById("roboLugarSelect");
+    const inputNuevo = document.getElementById("roboLugarNuevo");
+    if (!select || !inputNuevo) return;
+
+    if (select.value === "__NUEVO__") {
+        inputNuevo.style.display = "block";
+        inputNuevo.focus();
+    } else {
+        inputNuevo.style.display = "none";
+        if (select.value) {
+            localStorage.setItem("ultimo_lugar_robo", select.value);
+        }
+    }
+}
+
+/* ========================================= */
 /* GENERADORES DE COMUNICADOS RADIALES */
 /* ========================================= */
 function generar488(){
-    const lugar = document.getElementById("roboLugar").value || "[Lugar]";
+    const selectLugar = document.getElementById("roboLugarSelect");
+    let lugar = selectLugar ? selectLugar.value : "";
+
+    // Registrar nuevo lugar si corresponde
+    if (lugar === "__NUEVO__") {
+        const inputNuevo = document.getElementById("roboLugarNuevo");
+        const nuevoLugar = inputNuevo ? inputNuevo.value.trim() : "";
+
+        if (!nuevoLugar) {
+            return alert("Por favor, escribe el nombre del nuevo lugar.");
+        }
+
+        let listaLugares = obtenerLugaresGuardados();
+        if (!listaLugares.includes(nuevoLugar)) {
+            listaLugares.push(nuevoLugar);
+            listaLugares.sort(); // Mantener orden alfabético
+            localStorage.setItem("lista_lugares_robo", JSON.stringify(listaLugares));
+        }
+
+        lugar = nuevoLugar;
+        localStorage.setItem("ultimo_lugar_robo", lugar);
+
+        inputNuevo.value = "";
+        actualizarSelectLugares(lugar);
+    }
+
+    if (!lugar) {
+        lugar = "[Lugar]";
+    }
+
     const vehiculo = document.getElementById("roboVehiculo").value || "[Vehículo]";
     const color = document.getElementById("roboColor").value || "[Color]";
     const patente = document.getElementById("roboPatente").value || "[Patente]";
@@ -285,7 +359,7 @@ function generarIncautados(){
         let listaOficiales = obtenerOficialesGuardados();
         if (!listaOficiales.includes(nuevoNombre)) {
             listaOficiales.push(nuevoNombre);
-            listaOficiales.sort(); // Mantener orden alfabético
+            listaOficiales.sort(); 
             localStorage.setItem("lista_oficiales_incautadores", JSON.stringify(listaOficiales));
         }
 
