@@ -238,9 +238,11 @@ function actualizarSelectLugares(seleccionarLugar = "") {
     if (!select) return;
 
     const lugares = obtenerLugaresGuardados();
-    const ultimoSeleccionado = seleccionarLugar || localStorage.getItem("ultimo_lugar_robo") || lugares[0];
+    
+    // MODIFICADO: Ahora por defecto busca dejar el string vacío "" (que es nuestro texto de selección)
+    const ultimoSeleccionado = seleccionarLugar || localStorage.getItem("ultimo_lugar_robo") || "";
 
-    let html = '<option value="">🗺️ Seleccionar Ubicación/ Lugar --</option>';
+    let html = '<option value="">🗺️ Seleccionar Ubicación / Lugar</option>';
     lugares.forEach(lug => {
         html += `<option value="${lug}" ${lug === ultimoSeleccionado ? "selected" : ""}>📍 ${lug}</option>`;
     });
@@ -294,6 +296,7 @@ function generar488(){
 
         inputNuevo.value = "";
         actualizarSelectLugares(lugar);
+        document.getElementById("roboLugarSelect").value = "";
     }
 
     if (!lugar) {
