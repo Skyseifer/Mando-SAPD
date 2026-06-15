@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarReloj();
     renderizarPatrullas();
     toggleDetalleNegociacion();
+    actualizarSelectOficiales(); // NUEVO: Inicializa el selector dinámico de oficiales
 
     // Inicializar acordeón del manual
     const botonesAcordeon = document.querySelectorAll(".acordeon-btn");
@@ -75,12 +76,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Cargar el último oficial de incautaciones guardado
-    const campoOficial = document.getElementById("incautadoOficial");
-    if(campoOficial){
-        campoOficial.value = localStorage.getItem("ultimo_oficial_incautador") || "";
-        campoOficial.addEventListener("input", () => {
-            localStorage.setItem("ultimo_oficial_incautador", campoOficial.value);
+    // Cargar el ID de Anuncios automáticamente si existe el campo
+    const campoIdAnuncio = document.getElementById("anuncioId");
+    if(campoIdAnuncio){
+        campoIdAnuncio.value = localStorage.getItem("ultimo_id_anuncio") || "";
+        campoIdAnuncio.addEventListener("input", () => {
+            localStorage.setItem("ultimo_id_anuncio", campoIdAnuncio.value);
         });
     }
 });
@@ -180,6 +181,47 @@ function copiarVistaPrevia(){
 }
 
 /* ========================================= */
+/* GESTIÓN DINÁMICA DE OFICIALES (INCAUTACIONES) */
+/* ========================================= */
+function obtenerOficialesGuardados() {
+    const lista = localStorage.getItem("lista_oficiales_incautadores");
+    return lista ? JSON.parse(lista) : ["Eduardo Vinicius"];
+}
+
+function actualizarSelectOficiales(seleccionarNombre = "") {
+    const select = document.getElementById("incautadoOficialSelect");
+    if (!select) return;
+
+    const oficiales = obtenerOficialesGuardados();
+    const ultimoSeleccionado = seleccionarNombre || localStorage.getItem("ultimo_oficial_incautador") || oficiales[0];
+
+    let html = '<option value="">-- Selecciona Oficial que Procesa --</option>';
+    oficiales.forEach(ofi => {
+        html += `<option value="${ofi}" ${ofi === ultimoSeleccionado ? "selected" : ""}>👮‍♂️ ${ofi}</option>`;
+    });
+    html += '<option value="__NUEVO__">✍️ Agregar nuevo oficial...</option>';
+    
+    select.innerHTML = html;
+    verificarNuevoOficial();
+}
+
+function verificarNuevoOficial() {
+    const select = document.getElementById("incautadoOficialSelect");
+    const inputNuevo = document.getElementById("incautadoOficialNuevo");
+    if (!select || !inputNuevo) return;
+
+    if (select.value === "__NUEVO__") {
+        inputNuevo.style.display = "block";
+        inputNuevo.focus();
+    } else {
+        inputNuevo.style.display = "none";
+        if (select.value) {
+            localStorage.setItem("ultimo_oficial_incautador", select.value);
+        }
+    }
+}
+
+/* ========================================= */
 /* GENERADORES DE COMUNICADOS RADIALES */
 /* ========================================= */
 function generar488(){
@@ -228,21 +270,45 @@ function generarSAMS(tipoPaciente){
 function generarIncautados(){
     const nombre = document.getElementById("incautadoNombre").value || "[Sujeto]";
     const objetos = document.getElementById("incautadoObjetos").value || "[Objetos]";
-    const oficial = document.getElementById("incautadoOficial").value || "[Oficial]";
-    
-    if(oficial && oficial !== "[Oficial]") {
+    const selectOficial = document.getElementById("incautadoOficialSelect");
+    let oficial = selectOficial ? selectOficial.value : "";
+
+    // Lógica para registrar un oficial nuevo si está seleccionado
+    if (oficial === "__NUEVO__") {
+        const inputNuevo = document.getElementById("incautadoOficialNuevo");
+        const nuevoNombre = inputNuevo ? inputNuevo.value.trim() : "";
+
+        if (!nuevoNombre) {
+            return alert("Por favor, escribe el nombre del nuevo oficial.");
+        }
+
+        let listaOficiales = obtenerOficialesGuardados();
+        if (!listaOficiales.includes(nuevoNombre)) {
+            listaOficiales.push(nuevoNombre);
+            listaOficiales.sort(); // Mantener orden alfabético
+            localStorage.setItem("lista_oficiales_incautadores", JSON.stringify(listaOficiales));
+        }
+
+        oficial = nuevoNombre;
         localStorage.setItem("ultimo_oficial_incautador", oficial);
+        
+        inputNuevo.value = "";
+        actualizarSelectOficiales(oficial);
+    }
+
+    if (!oficial) {
+        oficial = "[Oficial]";
     }
 
     const mensaje = `/r ${nombre} | ${objetos} | Procesado por: ${oficial}`;
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }
+
 /* ========================================= */
 /* GENERADORES DE ANUNCIOS LSPD (CIUDADANÍA) */
 /* ========================================= */
 function generarAnuncioDisponibles() {
-    // Obtenemos el número de oficiales directamente desde la tarjeta de estadísticas
     const oficiales = document.getElementById("oficialesDisponibles").innerText || "0";
     const idUsuario = document.getElementById("anuncioId").value;
 
@@ -252,7 +318,6 @@ function generarAnuncioDisponibles() {
 
     const mensaje = `/lspd Se informa que se encuentran ${oficiales} oficiales disponibles para la ciudadania ID: ${idUsuario}`;
     
-    // Lo envía al cuadro verde de vista previa y lo copia automáticamente
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }
@@ -263,6 +328,7 @@ function generarAnuncioNoDisponibles() {
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }
+
 /* ========================================= */
 /* ACCIONES RÁPIDAS (CLAVES RADIALES) */
 /* ========================================= */
