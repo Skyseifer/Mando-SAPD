@@ -419,7 +419,7 @@ function generarAnuncioNoDisponibles() {
 /* ========================================= */
 function generarCodigo4(){
     const codigo = document.getElementById("codigoEvento").value;
-    const mensaje = `/r 10-97 del ${codigo} | Cod.4`;
+    const mensaje = `/r 10-98 del ${codigo} | Cod.4`;
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }
