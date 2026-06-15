@@ -237,7 +237,31 @@ function generarIncautados(){
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }
+/* ========================================= */
+/* GENERADORES DE ANUNCIOS LSPD (CIUDADANÍA) */
+/* ========================================= */
+function generarAnuncioDisponibles() {
+    // Obtenemos el número de oficiales directamente desde la tarjeta de estadísticas
+    const oficiales = document.getElementById("oficialesDisponibles").innerText || "0";
+    const idUsuario = document.getElementById("anuncioId").value;
 
+    if (!idUsuario || idUsuario < 1 || idUsuario > 100) {
+        return alert("Por favor, ingresa un ID válido entre 1 y 100 antes de generar el mensaje.");
+    }
+
+    const mensaje = `/lspd Se informa que se encuentran ${oficiales} oficiales disponibles para la ciudadania ID: ${idUsuario}`;
+    
+    // Lo envía al cuadro verde de vista previa y lo copia automáticamente
+    mostrarVistaPrevia(mensaje);
+    copiarMensaje(mensaje);
+}
+
+function generarAnuncioNoDisponibles() {
+    const mensaje = `/lspd Se informa que no se encuentran oficiales disponibles en este momento`;
+    
+    mostrarVistaPrevia(mensaje);
+    copiarMensaje(mensaje);
+}
 /* ========================================= */
 /* ACCIONES RÁPIDAS (CLAVES RADIALES) */
 /* ========================================= */
