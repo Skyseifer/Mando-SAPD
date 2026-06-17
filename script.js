@@ -473,11 +473,19 @@ function generarAnuncioGo(){
 /* ======================================================== */
 /* SISTEMA DE LISTADOS DINÁMICOS PARA INICIO DE PATRULLA    */
 /* ======================================================== */
+
+// NUEVO: Función para obtener de manera exclusiva la lista de oficiales de patrulla
+function obtenerOficialesPatrullaGuardados() {
+    const lista = localStorage.getItem("lista_oficiales_patrulla");
+    return lista ? JSON.parse(lista) : ["Eduardo Vinicius"]; // Mantiene el nombre inicial por defecto si está vacío
+}
+
 function actualizarSelectOficialesPatrulla(numeroOficial, seleccionarOficial = "") {
     const select = document.getElementById(`patOficial${numeroOficial}Select`);
     if (!select) return;
 
-    const oficiales = obtenerOficialesGuardados();
+    // MODIFICADO: Ahora lee exclusivamente de la lista de patrullas
+    const oficiales = obtenerOficialesPatrullaGuardados();
     
     let html = `<option value="">👮‍♂️ Seleccionar Oficial ${numeroOficial} ${numeroOficial === 2 ? '(Opcional)' : ''}</option>`;
     oficiales.forEach(oficial => {
@@ -506,8 +514,7 @@ function actualizarSelectLugaresPatrulla(seleccionarLugar = "") {
 
     let html = '<option value="">🗺️ Seleccionar Ubicación / Base</option>';
     lugares.forEach(lug => {
-        // CORREGIDO: Evaluaba contra "seleccionarLugar" en vez de "seleccionado"
-        html += `<option value="${lug}" ${lug === seleccionado ? "selected" : ""}>📍 ${lug}</option>`;
+        html += `<option value="${lug}" ${lug === seleccionado ? "selected" : ""}>📍 ${lug}</option>';
     });
     html += '<option value="__NUEVO__">✍️ Agregar nueva ubicación...</option>';
 
@@ -533,12 +540,14 @@ function generarPatrullaje() {
         const nuevoOf1 = document.getElementById("patOficial1Nuevo").value.trim();
         if (!nuevoOf1) return alert("Por favor, escribe el nombre del Oficial 1.");
         
-        let lista = obtenerOficialesGuardados();
+        // MODIFICADO: Registra de manera independiente en la lista de patrullas
+        let lista = obtenerOficialesPatrullaGuardados();
         if (!lista.includes(nuevoOf1)) {
             lista.push(nuevoOf1);
             lista.sort();
-            localStorage.setItem("lista_oficiales_incautadores", JSON.stringify(lista));
-            actualizarSelectOficiales();
+            localStorage.setItem("lista_oficiales_patrulla", JSON.stringify(lista));
+            
+            // Refresca los selects del panel de patrulla sin alterar incautaciones
             actualizarSelectOficialesPatrulla(1, nuevoOf1);
             actualizarSelectOficialesPatrulla(2, document.getElementById("patOficial2Select").value);
         }
@@ -552,12 +561,14 @@ function generarPatrullaje() {
         const nuevoOf2 = document.getElementById("patOficial2Nuevo").value.trim();
         if (!nuevoOf2) return alert("Por favor, escribe el nombre del Oficial 2.");
         
-        let lista = obtenerOficialesGuardados();
+        // MODIFICADO: Registra de manera independiente en la lista de patrullas
+        let lista = obtenerOficialesPatrullaGuardados();
         if (!lista.includes(nuevoOf2)) {
             lista.push(nuevoOf2);
             lista.sort();
-            localStorage.setItem("lista_oficiales_incautadores", JSON.stringify(lista));
-            actualizarSelectOficiales();
+            localStorage.setItem("lista_oficiales_patrulla", JSON.stringify(lista));
+            
+            // Refresca los selects del panel de patrulla sin alterar incautaciones
             actualizarSelectOficialesPatrulla(1, document.getElementById("patOficial1Select").value);
             actualizarSelectOficialesPatrulla(2, nuevoOf2);
         }
@@ -590,13 +601,11 @@ function generarPatrullaje() {
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 
-    // Actualizar estado de la flota automáticamente
     const calculoDotacion = oficial2.trim() !== "" ? 2 : 1;
     localStorage.setItem(unidad + "_estado", "true");
     localStorage.setItem(unidad + "_dotacion", calculoDotacion);
     renderizarPatrullas();
 
-    // Resetear campos formulario
     document.getElementById("patUnidad").value = "";
     actualizarSelectOficialesPatrulla(1, "");
     actualizarSelectOficialesPatrulla(2, "");
