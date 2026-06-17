@@ -254,7 +254,7 @@ function actualizarSelectLugares(seleccionarLugar = "") {
 
     let html = '<option value="">🗺️ Seleccionar Ubicación / Lugar</option>';
     lugares.forEach(lug => {
-        html += `<option value="${lug}" ${lug === ultimoSeleccionado ? "selected" : ""}>📍 ${lug}</option>';
+        html += `<option value="${lug}" ${lug === ultimoSeleccionado ? "selected" : ""}>📍 ${lug}</option>`;
     });
     html += '<option value="__NUEVO__">✍️ Agregar nuevo lugar...</option>';
 
@@ -524,7 +524,7 @@ function actualizarSelectLugaresPatrulla(seleccionarLugar = "") {
 
     let html = '<option value="">🗺️ Seleccionar Ubicación / Base</option>';
     lugares.forEach(lug => {
-        html += `<option value="${lug}" ${lug === seleccionado ? "selected" : ""}>📍 ${lug}</option>';
+        html += `<option value="${lug}" ${lug === seleccionado ? "selected" : ""}>📍 ${lug}</option>`;
     });
     html += '<option value="__NUEVO__">✍️ Agregar nueva ubicación...</option>';
 
