@@ -272,9 +272,11 @@ function verificarNuevoLugar() {
 }
 
 /* ========================================= */
-/* GENERADORES DE COMUNICADOS RADIALES */
+/* GENERADORES DE COMUNICADOS RADIALES       */
 /* ========================================= */
-function generar488(){
+
+// 1. ADAPTADO: Emite el reporte de robos leyendo el tipo (487 o 488) insertado entre ubicación y vehículo
+function generarReporteRobo(){
     const selectLugar = document.getElementById("roboLugarSelect");
     let lugar = selectLugar ? selectLugar.value : "";
 
@@ -306,6 +308,9 @@ function generar488(){
         lugar = "[Lugar]";
     }
 
+    // NUEVO: Lee el tipo de robo seleccionado arriba (487 o 488)
+    const tipoRobo = document.getElementById("roboTipoCodigo").value;
+
     const vehiculo = document.getElementById("roboVehiculo").value || "[Vehículo]";
     const color = document.getElementById("roboColor").value || "[Color]";
     const patente = (document.getElementById("roboPatente").value || "[Patente]").toUpperCase();
@@ -313,10 +318,22 @@ function generar488(){
     const rehenes = document.getElementById("roboRehenes").value || "0";
     const vestimenta = document.getElementById("roboVestimenta").value || "[Vestimenta]";
     const armas = document.getElementById("roboArmas").value || "[Armamento]";
-    const codigo = document.getElementById("codigoEvento").value;
 
-    const mensaje = `/r 10-97 al ${codigo} del lugar ${lugar} | V: ${vehiculo} C: ${color} Matricula: ${patente} COD-37 | Atracadores: ${atracadores} Vestimenta: ${vestimenta} Portan: ${armas} | Rehenes: ${rehenes}`;
+    // Construye el mensaje con el tipo de robo dinámico (487 o 488)
+    const mensaje = `/r 10-97 al ${tipoRobo} del lugar ${lugar} | V: ${vehiculo} C: ${color} Matricula: ${patente} COD-37 | Atracadores: ${atracadores} Vestimenta: ${vestimenta} Portan: ${armas} | Rehenes: ${rehenes}`;
+    
     mostrarVistaPrevia(mensaje);
+    copiarMensaje(mensaje);
+
+    // Limpieza de campos tras el despacho
+    document.getElementById("roboVehiculo").value = "";
+    document.getElementById("roboColor").value = "";
+    document.getElementById("roboPatente").value = "";
+    document.getElementById("roboAtracadores").value = "";
+    document.getElementById("roboRehenes").value = "";
+    document.getElementById("roboVestimenta").value = "";
+    document.getElementById("roboArmas").value = "";
+    if(selectLugar) selectLugar.value = "";
 }
 
 function generarPatrullaje(){
@@ -345,7 +362,7 @@ function generarSAMS(tipoPaciente){
     const mensaje = `/rff Solicitamos un Alfa en nuestro 10-20 para tratar a ${stringPaciente} en estado ${estado}`;
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
-}   
+}    
 function solicitarCopiaSAMS() {
     const mensaje = "/rff SAMS me Copia?";
     mostrarVistaPrevia(mensaje);
@@ -415,8 +432,10 @@ function generarAnuncioNoDisponibles() {
 }
 
 /* ========================================= */
-/* ACCIONES RÁPIDAS (CLAVES RADIALES) */
+/* ACCIONES RÁPIDAS (CLAVES RADIALES - SEPARADO) */
 /* ========================================= */
+
+// Leen el selector "codigoEvento" del segundo panel independiente
 function generarCodigo4(){
     const codigo = document.getElementById("codigoEvento").value;
     const mensaje = `/r 10-98 del ${codigo} | Cod.4`;
@@ -424,6 +443,7 @@ function generarCodigo4(){
     copiarMensaje(mensaje);
 }
 
+// Leen el selector "codigoEvento" del segundo panel independiente
 function generarSinExito(){
     const codigo = document.getElementById("codigoEvento").value;
     const mensaje = `/r 10-98 al último ${codigo}, sin éxito | Procedemos con 10-22`;
@@ -431,13 +451,13 @@ function generarSinExito(){
     copiarMensaje(mensaje);
 }
 
+// Leen el selector "codigoEvento" del segundo panel independiente
 function generarRetomar(){
     const codigo = document.getElementById("codigoEvento").value;
     const mensaje = `/r 10-98 del último ${codigo} | Retomamos 10-33`;
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }
-
 /* ========================================= */
 /* LÓGICA DE NEGOCIACIONES CON HORA REAL */
 /* ========================================= */
