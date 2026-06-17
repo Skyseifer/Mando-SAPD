@@ -487,7 +487,7 @@ function generarAnuncioGo(){
 
 function obtenerOficialesPatrullaGuardados() {
     const lista = localStorage.getItem("lista_oficiales_patrulla");
-    return lista ? JSON.parse(lista) : ["Eduardo Vinicius"]; 
+    return lista ? JSON.parse(lista) : [" Teniente Vinicius"]; 
 }
 
 function actualizarSelectOficialesPatrulla(numeroOficial, seleccionarOficial = "") {
