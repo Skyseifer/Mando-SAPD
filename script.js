@@ -30,11 +30,17 @@ function mostrarPestana(id){
     const tabObjetivo = document.getElementById(id);
     if(tabObjetivo) tabObjetivo.classList.add("active");
 
+    // Buscamos todos los botones y les agregamos la clase active según el ID
     const botones = document.querySelectorAll(".tab-btn");
-    if(botones.length >= 3) {
-        if(id === "operaciones") botones[0].classList.add("active");
-        if(id === "comunicaciones") botones[1].classList.add("active");
-        if(id === "manual") botones[2].classList.add("active");
+    botones.forEach(btn => {
+        if(btn.getAttribute("onclick").includes(`'${id}'`)) {
+            btn.classList.add("active");
+        }
+    });
+
+    // Si abren la pestaña de personal, renderizamos las tablas
+    if(id === "personal") {
+        renderizarTablasGestion();
     }
 }
 
@@ -45,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarReloj();
     renderizarPatrullas();
     toggleDetalleNegociacion();
+    renderizarTablasGestion();
     
     // Inicializar selectores de Incautaciones y Robos
     actualizarSelectOficial(); 
@@ -620,4 +627,82 @@ function reiniciarOficialesPatrulla() {
     actualizarSelectOficialesPatrulla(1, "");
     actualizarSelectOficialesPatrulla(2, "");
     alert("Lista de oficiales de patrulla reiniciada.");
+}
+
+/* ======================================================== */
+/* SISTEMA DE GESTIÓN Y EDICIÓN DE PERSONAL (RANGOS)        */
+/* ======================================================== */
+
+function renderizarTablasGestion() {
+    const tbodyPatrulla = document.getElementById("tablaGestionPatrulla");
+    const tbodyIncautaciones = document.getElementById("tablaGestionIncautaciones");
+
+    if (tbodyPatrulla) {
+        const oficialesPatrulla = obtenerOficialesPatrullaGuardados();
+        tbodyPatrulla.innerHTML = oficialesPatrulla.map((ofi, index) => `
+            <tr style="border-bottom: 1px solid #333;">
+                <td style="padding: 8px; color: #fff;">🔹 ${ofi}</td>
+                <td style="padding: 8px; text-align: right;">
+                    <button onclick="editarOficial('patrulla', ${index})" style="background: #0288d1; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; margin-right: 5px;">✏️</button>
+                    <button onclick="eliminarOficial('patrulla', ${index})" style="background: #d32f2f; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer;">🗑️</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    if (tbodyIncautaciones) {
+        const oficialesIncautaciones = obtenerOficialesGuardados();
+        tbodyIncautaciones.innerHTML = oficialesIncautaciones.map((ofi, index) => `
+            <tr style="border-bottom: 1px solid #333;">
+                <td style="padding: 8px; color: #fff;">👮‍♂️ ${ofi}</td>
+                <td style="padding: 8px; text-align: right;">
+                    <button onclick="editarOficial('incautacion', ${index})" style="background: #0288d1; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; margin-right: 5px;">✏️</button>
+                    <button onclick="eliminarOficial('incautacion', ${index})" style="background: #d32f2f; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer;">🗑️</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+}
+
+function editarOficial(tipo, index) {
+    let claveStorage = tipo === 'patrulla' ? "lista_oficiales_patrulla" : "lista_oficiales_incautadores";
+    let lista = tipo === 'patrulla' ? obtenerOficialesPatrullaGuardados() : obtenerOficialesGuardados();
+    
+    const nombreActual = lista[index];
+    const nuevoNombre = prompt(`Editar oficial/rango (Ej: Sgto. ${nombreActual.replace(/^(Oficial |Sgto\. |Teniente\. )/, '')}):`, nombreActual);
+    
+    if (nuevoNombre === null) return; // Cancelado
+    if (nuevoNombre.trim() === "") return alert("El nombre no puede estar vacío.");
+
+    lista[index] = nuevoNombre.trim();
+    lista.sort(); // Lo vuelve a ordenar alfabéticamente por si cambió el rango
+    localStorage.setItem(claveStorage, JSON.stringify(lista));
+    
+    // Refrescar todo el sistema
+    renderizarTablasGestion();
+    if (tipo === 'patrulla') {
+        actualizarSelectOficialesPatrulla(1);
+        actualizarSelectOficialesPatrulla(2);
+    } else {
+        actualizarSelectOficiales();
+    }
+}
+
+function eliminarOficial(tipo, index) {
+    let claveStorage = tipo === 'patrulla' ? "lista_oficiales_patrulla" : "lista_oficiales_incautadores";
+    let lista = tipo === 'patrulla' ? obtenerOficialesPatrullaGuardados() : obtenerOficialesGuardados();
+    
+    if (!confirm(`¿Estás seguro de que deseas eliminar a "${lista[index]}" del sistema?`)) return;
+
+    lista.splice(index, 1);
+    localStorage.setItem(claveStorage, JSON.stringify(lista));
+    
+    // Refrescar todo el sistema
+    renderizarTablasGestion();
+    if (tipo === 'patrulla') {
+        actualizarSelectOficialesPatrulla(1);
+        actualizarSelectOficialesPatrulla(2);
+    } else {
+        actualizarSelectOficiales();
+    }
 }
