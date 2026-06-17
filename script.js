@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // Inicializar selectores dinámicos
     actualizarSelectOficiales(); 
-    actualizarSelectLugares(); // NUEVO: Inicializa el selector dinámico de lugares de robo
+    actualizarSelectLugares(); 
 
     // Inicializar acordeón del manual
     const botonesAcordeon = document.querySelectorAll(".acordeon-btn");
@@ -147,7 +147,6 @@ function renderizarPatrullas(){
     contenedor.innerHTML += crearGrupo("ADAM", adam);
     contenedor.innerHTML += crearGrupo("MERIT", merit);
 
-    // Actualizar tarjetas de estadísticas de la pestaña Operaciones
     const elDisp = document.getElementById("disponibles");
     const elNoDisp = document.getElementById("nodisponibles");
     const elOfi = document.getElementById("oficialesDisponibles");
@@ -203,7 +202,7 @@ function actualizarSelectOficiales(seleccionarNombre = "") {
 
     let html = '<option value="">-- Selecciona Oficial que Procesa --</option>';
     oficiales.forEach(ofi => {
-        html += `<option value="${ofi}" ${ofi === ultimoSeleccionado ? "selected" : ""}>👮‍♂️ ${ofi}</option>`;
+        html += `<option value="${ofi}" ${ofi === ultimoSeleccionado ? "selected" : ""}>👮‍♂️ ${ofi}</option>';
     });
     html += '<option value="__NUEVO__">✍️ Agregar nuevo oficial...</option>';
     
@@ -228,12 +227,11 @@ function verificarNuevoOficial() {
 }
 
 /* ========================================= */
-/* GESTIÓN DINÁMICA DE LUGARES DE ROBO (NUEVO) */
+/* GESTIÓN DINÁMICA DE LUGARES DE ROBO       */
 /* ========================================= */
 function obtenerLugaresGuardados() {
     const lista = localStorage.getItem("lista_lugares_robo");
-    // Algunos lugares por defecto para iniciar la lista
-    return lista ? JSON.parse(lista) : ["Joyería Vangelico", "Artifact", "Barco de Drogas", "Yate", "Tren Merryweather", "Banco Paleto", "Union Depository",];
+    return lista ? JSON.parse(lista) : ["Joyería Vangelico", "Artifact", "Barco de Drogas", "Yate", "Tren Merryweather", "Banco Paleto", "Union Depository"];
 }
 
 function actualizarSelectLugares(seleccionarLugar = "") {
@@ -241,13 +239,11 @@ function actualizarSelectLugares(seleccionarLugar = "") {
     if (!select) return;
 
     const lugares = obtenerLugaresGuardados();
-    
-    // MODIFICADO: Ahora por defecto busca dejar el string vacío "" (que es nuestro texto de selección)
     const ultimoSeleccionado = seleccionarLugar || localStorage.getItem("ultimo_lugar_robo") || "";
 
     let html = '<option value="">🗺️ Seleccionar Ubicación / Lugar</option>';
     lugares.forEach(lug => {
-        html += `<option value="${lug}" ${lug === ultimoSeleccionado ? "selected" : ""}>📍 ${lug}</option>`;
+        html += `<option value="${lug}" ${lug === ultimoSeleccionado ? "selected" : ""}>📍 ${lug}</option>';
     });
     html += '<option value="__NUEVO__">✍️ Agregar nuevo lugar...</option>';
 
@@ -274,13 +270,10 @@ function verificarNuevoLugar() {
 /* ========================================= */
 /* GENERADORES DE COMUNICADOS RADIALES       */
 /* ========================================= */
-
-// 1. ADAPTADO: Emite el reporte de robos leyendo el tipo (487 o 488) insertado entre ubicación y vehículo
 function generarReporteRobo(){
     const selectLugar = document.getElementById("roboLugarSelect");
     let lugar = selectLugar ? selectLugar.value : "";
 
-    // Registrar nuevo lugar si corresponde
     if (lugar === "__NUEVO__") {
         const inputNuevo = document.getElementById("roboLugarNuevo");
         const nuevoLugar = inputNuevo ? inputNuevo.value.trim() : "";
@@ -292,25 +285,22 @@ function generarReporteRobo(){
         let listaLugares = obtenerLugaresGuardados();
         if (!listaLugares.includes(nuevoLugar)) {
             listaLugares.push(nuevoLugar);
-            listaLugares.sort(); // Mantener orden alfabético
+            listaLugares.sort(); 
             localStorage.setItem("lista_lugares_robo", JSON.stringify(listaLugares));
         }
 
         lugar = nuevoLugar;
         localStorage.setItem("ultimo_lugar_robo", lugar);
 
-        inputNuevo.value = "";
+        if(inputNuevo) inputNuevo.value = "";
         actualizarSelectLugares(lugar);
-        document.getElementById("roboLugarSelect").value = "";
     }
 
     if (!lugar) {
         lugar = "[Lugar]";
     }
 
-    // NUEVO: Lee el tipo de robo seleccionado arriba (487 o 488)
     const tipoRobo = document.getElementById("roboTipoCodigo").value;
-
     const vehiculo = document.getElementById("roboVehiculo").value || "[Vehículo]";
     const color = document.getElementById("roboColor").value || "[Color]";
     const patente = (document.getElementById("roboPatente").value || "[Patente]").toUpperCase();
@@ -319,13 +309,11 @@ function generarReporteRobo(){
     const vestimenta = document.getElementById("roboVestimenta").value || "[Vestimenta]";
     const armas = document.getElementById("roboArmas").value || "[Armamento]";
 
-    // Construye el mensaje con el tipo de robo dinámico (487 o 488)
     const mensaje = `/r 10-97 al ${tipoRobo} del lugar ${lugar} | V: ${vehiculo} C: ${color} Matricula: ${patente} COD-37 | Atracadores: ${atracadores} Vestimenta: ${vestimenta} Portan: ${armas} | Rehenes: ${rehenes}`;
     
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 
-    // Limpieza de campos tras el despacho
     document.getElementById("roboVehiculo").value = "";
     document.getElementById("roboColor").value = "";
     document.getElementById("roboPatente").value = "";
@@ -334,24 +322,7 @@ function generarReporteRobo(){
     document.getElementById("roboVestimenta").value = "";
     document.getElementById("roboArmas").value = "";
     if(selectLugar) selectLugar.value = "";
-}
-
-function generarPatrullaje(){
-    const unidad = document.getElementById("patUnidad").value;
-    const oficial1 = document.getElementById("patOficial1").value;
-    const oficial2 = document.getElementById("patOficial2").value;
-    const ubicacion = document.getElementById("patUbicacion").value || "Comisaría Central";
-
-    if(!unidad || !oficial1) return alert("Faltan datos obligatorios.");
-
-    const calculoDotacion = oficial2.trim() !== "" ? 2 : 1;
-    localStorage.setItem(unidad + "_estado", "true");
-    localStorage.setItem(unidad + "_dotacion", calculoDotacion);
-    renderizarPatrullas();
-
-    const oficialesTexto = oficial2 ? `${oficial1} y ${oficial2}` : oficial1;
-    const mensaje = `/r ${unidad} conformado por ${oficialesTexto}, inician 10-33 desde ${ubicacion}, Good Service.`;
-    mostrarVistaPrevia(mensaje);
+    verificarNuevoLugar();
 }
 
 function generarSAMS(tipoPaciente){
@@ -363,6 +334,7 @@ function generarSAMS(tipoPaciente){
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }    
+
 function solicitarCopiaSAMS() {
     const mensaje = "/rff SAMS me Copia?";
     mostrarVistaPrevia(mensaje);
@@ -375,7 +347,6 @@ function generarIncautados(){
     const selectOficial = document.getElementById("incautadoOficialSelect");
     let oficial = selectOficial ? selectOficial.value : "";
 
-    // Lógica para registrar un oficial nuevo si está seleccionado
     if (oficial === "__NUEVO__") {
         const inputNuevo = document.getElementById("incautadoOficialNuevo");
         const nuevoNombre = inputNuevo ? inputNuevo.value.trim() : "";
@@ -394,7 +365,7 @@ function generarIncautados(){
         oficial = nuevoNombre;
         localStorage.setItem("ultimo_oficial_incautador", oficial);
         
-        inputNuevo.value = "";
+        if(inputNuevo) inputNuevo.value = "";
         actualizarSelectOficiales(oficial);
     }
 
@@ -432,10 +403,8 @@ function generarAnuncioNoDisponibles() {
 }
 
 /* ========================================= */
-/* ACCIONES RÁPIDAS (CLAVES RADIALES - SEPARADO) */
+/* ACCIONES RÁPIDAS (CLAVES RADIALES)        */
 /* ========================================= */
-
-// Leen el selector "codigoEvento" del segundo panel independiente
 function generarCodigo4(){
     const codigo = document.getElementById("codigoEvento").value;
     const mensaje = `/r 10-98 del ${codigo} | Cod.4`;
@@ -443,7 +412,6 @@ function generarCodigo4(){
     copiarMensaje(mensaje);
 }
 
-// Leen el selector "codigoEvento" del segundo panel independiente
 function generarSinExito(){
     const codigo = document.getElementById("codigoEvento").value;
     const mensaje = `/r 10-98 al último ${codigo}, sin éxito | Procedemos con 10-22`;
@@ -451,13 +419,13 @@ function generarSinExito(){
     copiarMensaje(mensaje);
 }
 
-// Leen el selector "codigoEvento" del segundo panel independiente
 function generarRetomar(){
     const codigo = document.getElementById("codigoEvento").value;
     const mensaje = `/r 10-98 del último ${codigo} | Retomamos 10-33`;
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }
+
 /* ========================================= */
 /* LÓGICA DE NEGOCIACIONES CON HORA REAL */
 /* ========================================= */
@@ -495,27 +463,21 @@ function generarNegociacion(tipoAccion){
 
 function generarAnuncioGo(){
     const lugar = document.getElementById("lugarNegociacion").value;
-    
     if(!lugar) return alert("Debe seleccionar un robo de la lista antes de enviar el GO.");
 
-    // Estructura el mensaje final con el lugar seleccionado
     const mensaje = `/lspd GO ${lugar}`;
-
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 }
 
-
-// ========================================================
-// SISTEMA DE LISTADOS DINÁMICOS PARA INICIO DE PATRULLA
-// ========================================================
-
+/* ======================================================== */
+/* SISTEMA DE LISTADOS DINÁMICOS PARA INICIO DE PATRULLA    */
+/* ======================================================== */
 function actualizarSelectOficialesPatrulla(numeroOficial, seleccionarOficial = "") {
     const select = document.getElementById(`patOficial${numeroOficial}Select`);
     if (!select) return;
 
-    // Comparte la misma lista de oficiales que usas en incautaciones
-    const oficiales = JSON.parse(localStorage.getItem("lista_oficiales_incautadores")) || ["Eduardo Vinicius"];
+    const oficiales = obtenerOficialesGuardados();
     
     let html = `<option value="">👮‍♂️ Seleccionar Oficial ${numeroOficial} ${numeroOficial === 2 ? '(Opcional)' : ''}</option>`;
     oficiales.forEach(oficial => {
@@ -539,13 +501,13 @@ function actualizarSelectLugaresPatrulla(seleccionarLugar = "") {
     const select = document.getElementById("patUbicacionSelect");
     if (!select) return;
 
-    // Comparte la misma lista de ubicaciones que usas en los robos
     const lugares = JSON.parse(localStorage.getItem("lista_ubicaciones_patrulla")) || ["15va Comisaria de Vinewood"];
     const seleccionado = seleccionarLugar || "";
 
     let html = '<option value="">🗺️ Seleccionar Ubicación / Base</option>';
     lugares.forEach(lug => {
-        html += `<option value="${lug}" ${lug === seleccionarLugar ? "selected" : ""}>📍 ${lug}</option>`;
+        // CORREGIDO: Evaluaba contra "seleccionarLugar" en vez de "seleccionado"
+        html += `<option value="${lug}" ${lug === seleccionado ? "selected" : ""}>📍 ${lug}</option>`;
     });
     html += '<option value="__NUEVO__">✍️ Agregar nueva ubicación...</option>';
 
@@ -571,12 +533,14 @@ function generarPatrullaje() {
         const nuevoOf1 = document.getElementById("patOficial1Nuevo").value.trim();
         if (!nuevoOf1) return alert("Por favor, escribe el nombre del Oficial 1.");
         
-        let lista = JSON.parse(localStorage.getItem("lista_oficiales_incautadores")) || ["Eduardo Vinicius"];
+        let lista = obtenerOficialesGuardados();
         if (!lista.includes(nuevoOf1)) {
             lista.push(nuevoOf1);
             lista.sort();
             localStorage.setItem("lista_oficiales_incautadores", JSON.stringify(lista));
-            if(typeof actualizarSelectOficiales === 'function') actualizarSelectOficiales();
+            actualizarSelectOficiales();
+            actualizarSelectOficialesPatrulla(1, nuevoOf1);
+            actualizarSelectOficialesPatrulla(2, document.getElementById("patOficial2Select").value);
         }
         oficial1 = nuevoOf1;
     }
@@ -588,12 +552,14 @@ function generarPatrullaje() {
         const nuevoOf2 = document.getElementById("patOficial2Nuevo").value.trim();
         if (!nuevoOf2) return alert("Por favor, escribe el nombre del Oficial 2.");
         
-        let lista = JSON.parse(localStorage.getItem("lista_oficiales_incautadores")) || ["Eduardo Vinicius"];
+        let lista = obtenerOficialesGuardados();
         if (!lista.includes(nuevoOf2)) {
             lista.push(nuevoOf2);
             lista.sort();
             localStorage.setItem("lista_oficiales_incautadores", JSON.stringify(lista));
-            if(typeof actualizarSelectOficiales === 'function') actualizarSelectOficiales();
+            actualizarSelectOficiales();
+            actualizarSelectOficialesPatrulla(1, document.getElementById("patOficial1Select").value);
+            actualizarSelectOficialesPatrulla(2, nuevoOf2);
         }
         oficial2 = nuevoOf2;
     }
@@ -605,12 +571,12 @@ function generarPatrullaje() {
         const nuevaUbi = document.getElementById("patUbicacionNuevo").value.trim();
         if (!nuevaUbi) return alert("Por favor, escribe la nueva ubicación.");
         
-        let lista = JSON.parse(localStorage.getItem("lista_lugares_robo")) || ["Joyería Vangelico"];
+        let lista = JSON.parse(localStorage.getItem("lista_ubicaciones_patrulla")) || ["15va Comisaria de Vinewood"];
         if (!lista.includes(nuevaUbi)) {
             lista.push(nuevaUbi);
             lista.sort();
-            localStorage.setItem("lista_lugares_robo", JSON.stringify(lista));
-            if(typeof actualizarSelectLugares === 'function') actualizarSelectLugares();
+            localStorage.setItem("lista_ubicaciones_patrulla", JSON.stringify(lista));
+            actualizarSelectLugaresPatrulla(nuevaUbi);
         }
         ubicacion = nuevaUbi;
     }
@@ -624,7 +590,13 @@ function generarPatrullaje() {
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 
-    // Resetear formulario
+    // Actualizar estado de la flota automáticamente
+    const calculoDotacion = oficial2.trim() !== "" ? 2 : 1;
+    localStorage.setItem(unidad + "_estado", "true");
+    localStorage.setItem(unidad + "_dotacion", calculoDotacion);
+    renderizarPatrullas();
+
+    // Resetear campos formulario
     document.getElementById("patUnidad").value = "";
     actualizarSelectOficialesPatrulla(1, "");
     actualizarSelectOficialesPatrulla(2, "");
