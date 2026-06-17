@@ -84,51 +84,64 @@
         <div id="comunicaciones" class="tab-content">
             <div class="com-layout">
                 
-                <div class="panel">
-                    <h2>🚨 Radio Interna Robos</h2>
+               <div class="com-col-flex">
                     
-                    <select id="roboLugarSelect" onchange="verificarNuevoLugar()">
+                    <div class="panel">
+                        <h2>🚨 Radio Interna Robos</h2>
+                        
+                        <select id="roboLugarSelect" onchange="verificarNuevoLugar()">
+                            </select>
+                        <input type="text" id="roboLugarNuevo" placeholder="Escribe el nuevo lugar aquí..." style="display: none; margin-top: 5px;">
+                        
+                        <select id="roboTipoCodigo">
+                            <option value="488" selected>📉 488 | Robo Menor</option>
+                            <option value="487">📈 487 | Robo Mayor</option>
                         </select>
-                    <input type="text" id="roboLugarNuevo" placeholder="Escribe el nuevo lugar aquí..." style="display: none; margin-top: 5px;">
-                    
-                    <input type="text" id="roboVehiculo" placeholder="Vehículo">
-                    <input type="text" id="roboColor" placeholder="Color">
-                    <input type="text" id="roboPatente" placeholder="Patente">
-                    <input type="number" id="roboAtracadores" placeholder="Cantidad de atracadores">
-                    <input type="number" id="roboRehenes" placeholder="Cantidad de rehenes (0 si no hay)" min="0">
-                    <input type="text" id="roboVestimenta" placeholder="Vestimenta">
-                    <input type="text" id="roboArmas" placeholder="Armamento">
-                    
-                    <button class="com-btn" style="background:#2563eb; margin-bottom:12px;" onclick="generar488()">📋 Generar Reporte General</button>
-                    
-                    <label style="font-size:12px; color:#9ca3af; display:block; margin-bottom:4px;">Seleccione Clave del Evento:</label>
-                    <select id="codigoEvento">
-                        <option value="148">148 | Resistencia al arresto</option>
-                        <option value="187">187 | Homicidio</option>
-                        <option value="207">207 | Secuestro</option>
-                        <option value="208">208 | Disparos</option>
-                        <option value="211">211 | Robo a mano Armada</option>
-                        <option value="215">215 | Tiroteo en Curso</option>
-                        <option value="242">242 | Agresion</option>
-                        <option value="320">320 | Venta de Drogas</option>
-                        <option value="415">415 | Disturbios</option>
-                        <option value="417">417 | Sujeto Armado</option>
-                        <option value="487">487 | Robo Mayor</option>
-                        <option value="488" selected>488 | Robo Menor</option>
-                        <option value="505">505 | Conduccion Temeraria</option>
-                        <option value="510">510 | Carrera o Exceso de Velocidad</option>
-                        <option value="586">586 | Estacionamiento Ilegal</option>
-                        <option value="254 V">254 V | Persecución Vehicular</option>
-                        <option value="254 P">254 P | Persecucion a Pie</option>
-                        <option value="CÓDIGO 12">CÓDIGO 12 | Falsa Alarma</option>
-                        <option value="CÓDIGO 37">CÓDIGO 37 | Vehiculo Robado</option>
-                    </select>
 
-                    <div class="com-grid">
-                        <button class="com-btn" style="background:#1e3a8a;" onclick="generarCodigo4()">🟢 Cód. 4</button>
-                        <button class="com-btn" style="background:#991b1b;" onclick="generarSinExito()">🔴 Sin Éxito</button>
-                        <button class="com-btn" style="background:#15803d; grid-column: span 2;" onclick="generarRetomar()">🚔 Retomar Patrullaje</button>
+                        <input type="text" id="roboVehiculo" placeholder="Vehículo">
+                        <input type="text" id="roboColor" placeholder="Color">
+                        <input type="text" id="roboPatente" placeholder="Patente">
+                        <input type="number" id="roboAtracadores" placeholder="Cantidad de atracadores">
+                        <input type="number" id="roboRehenes" placeholder="Cantidad de rehenes (0 si no hay)" min="0">
+                        <input type="text" id="roboVestimenta" placeholder="Vestimenta">
+                        <input type="text" id="roboArmas" placeholder="Armamento">
+                        
+                        <button class="com-btn" style="background:#2563eb;" onclick="generarReporteRobo()">📢 Emitir Radio Interna</button>
                     </div>
+
+                    <div class="panel">
+                        <h2>📻 Códigos de Estado</h2>
+                        
+                        <label style="font-size:12px; color:#9ca3af; display:block; margin-bottom:4px;">Seleccione Clave del Evento:</label>
+                        <select id="codigoEvento">
+                            <option value="148">148 | Resistencia al arresto</option>
+                            <option value="187">187 | Homicidio</option>
+                            <option value="207">207 | Secuestro</option>
+                            <option value="208">208 | Disparos</option>
+                            <option value="211">211 | Robo a mano Armada</option>
+                            <option value="215">215 | Tiroteo en Curso</option>
+                            <option value="242">242 | Agresion</option>
+                            <option value="320">320 | Venta de Drogas</option>
+                            <option value="415">415 | Disturbios</option>
+                            <option value="417">417 | Sujeto Armado</option>
+                            <option value="487">487 | Robo Mayor</option>
+                            <option value="488" selected>488 | Robo Menor</option>
+                            <option value="505">505 | Conduccion Temeraria</option>
+                            <option value="510">510 | Carrera o Exceso de Velocidad</option>
+                            <option value="586">586 | Estacionamiento Ilegal</option>
+                            <option value="254 V">254 V | Persecución Vehicular</option>
+                            <option value="254 P">254 P | Persecucion a Pie</option>
+                            <option value="CÓDIGO 12">CÓDIGO 12 | Falsa Alarma</option>
+                            <option value="CÓDIGO 37">CÓDIGO 37 | Vehiculo Robado</option>
+                        </select>
+
+                        <div class="com-grid">
+                            <button class="com-btn" style="background:#1e3a8a;" onclick="generarCodigo4()">🟢 Cód. 4</button>
+                            <button class="com-btn" style="background:#991b1b;" onclick="generarSinExito()">🔴 Sin Éxito</button>
+                            <button class="com-btn" style="background:#15803d; grid-column: span 2;" onclick="generarRetomar()">🚔 Retomar Patrullaje</button>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="com-col-flex">
