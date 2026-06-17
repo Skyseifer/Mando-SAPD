@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // Inicializar selectores dinámicos
     actualizarSelectOficiales(); 
-    actualizarSelectLugares(); // NUEVO: Inicializa el selector dinámico de lugares de robo
+    actualizarSelectLugares(); // Inicializa el selector dinámico de lugares de robo
 
     // Inicializar acordeón del manual
     const botonesAcordeon = document.querySelectorAll(".acordeon-btn");
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Cargar Notas Guardadas
     const notas = document.getElementById("notas");
     if(notas){
-        notas.value = localStorage.getItem("notas") || "";
+        notes.value = localStorage.getItem("notas") || "";
         notas.addEventListener("input", () => localStorage.setItem("notas", notas.value));
     }
 
@@ -99,6 +99,26 @@ function cambiarEstado(nombre){
     const estadoActual = localStorage.getItem(nombre + "_estado") === "true";
     localStorage.setItem(nombre + "_estado", !estadoActual);
     renderizarPatrullas();
+}
+
+/* ========================================= */
+/* REPOSITORIO DE FUNCIONES AUXILIARES */
+/* ========================================= */
+function mostrarVistaPrevia(texto){
+    const vp = document.getElementById("vistaPrevia");
+    if(vp) vp.value = texto;
+}
+
+function copiarMensaje(texto){
+    navigator.clipboard.writeText(texto)
+    .then(() => { alert("Mensaje copiado con éxito."); })
+    .catch(() => { alert("Error al copiar automáticamente."); });
+}
+
+function copiarVistaPrevia(){
+    const texto = document.getElementById("vistaPrevia").value;
+    if(!texto) return alert("No hay mensaje estructurado.");
+    copiarMensaje(texto);
 }
 
 function guardarDotacion(nombre, cantidad){
@@ -167,26 +187,6 @@ function reiniciarUnidades(){
 }
 
 /* ========================================= */
-/* REPOSITORIO DE FUNCIONES AUXILIARES */
-/* ========================================= */
-function mostrarVistaPrevia(texto){
-    const vp = document.getElementById("vistaPrevia");
-    if(vp) vp.value = texto;
-}
-
-function copiarMensaje(texto){
-    navigator.clipboard.writeText(texto)
-    .then(() => { alert("Mensaje copiado con éxito."); })
-    .catch(() => { alert("Error al copiar automáticamente."); });
-}
-
-function copiarVistaPrevia(){
-    const texto = document.getElementById("vistaPrevia").value;
-    if(!texto) return alert("No hay mensaje estructurado.");
-    copiarMensaje(texto);
-}
-
-/* ========================================= */
 /* GESTIÓN DINÁMICA DE OFICIALES (INCAUTACIONES) */
 /* ========================================= */
 function obtenerOficialesGuardados() {
@@ -228,12 +228,11 @@ function verificarNuevoOficial() {
 }
 
 /* ========================================= */
-/* GESTIÓN DINÁMICA DE LUGARES DE ROBO (NUEVO) */
+/* GESTIÓN DINÁMICA DE LUGARES DE ROBO       */
 /* ========================================= */
 function obtenerLugaresGuardados() {
     const lista = localStorage.getItem("lista_lugares_robo");
-    // Algunos lugares por defecto para iniciar la lista
-    return lista ? JSON.parse(lista) : ["Joyería Vangelico", "Artifact", "Barco de Drogas", "Yate", "Tren Merryweather", "Banco Paleto", "Union Depository",];
+    return lista ? JSON.parse(lista) : ["Joyería Vangelico", "Artifact", "Barco de Drogas", "Yate", "Tren Merryweather", "Banco Paleto", "Union Depository"];
 }
 
 function actualizarSelectLugares(seleccionarLugar = "") {
@@ -241,13 +240,11 @@ function actualizarSelectLugares(seleccionarLugar = "") {
     if (!select) return;
 
     const lugares = obtenerLugaresGuardados();
-    
-    // MODIFICADO: Ahora por defecto busca dejar el string vacío "" (que es nuestro texto de selección)
     const ultimoSeleccionado = seleccionarLugar || localStorage.getItem("ultimo_lugar_robo") || "";
 
     let html = '<option value="">🗺️ Seleccionar Ubicación / Lugar</option>';
     lugares.forEach(lug => {
-        html += `<option value="${lug}" ${lug === ultimoSeleccionado ? "selected" : ""}>📍 ${lug}</option>`;
+        html += `<option value="${lug}" ${lug === ultimoSeleccionado ? "selected" : ""}>📍 ${lug}</option>';
     });
     html += '<option value="__NUEVO__">✍️ Agregar nuevo lugar...</option>';
 
@@ -275,12 +272,11 @@ function verificarNuevoLugar() {
 /* GENERADORES DE COMUNICADOS RADIALES       */
 /* ========================================= */
 
-// 1. ADAPTADO: Emite el reporte de robos leyendo el tipo (487 o 488) insertado entre ubicación y vehículo
+// FIJADO: Función corregida para procesar y despachar el reporte de Radio Interna
 function generarReporteRobo(){
     const selectLugar = document.getElementById("roboLugarSelect");
     let lugar = selectLugar ? selectLugar.value : "";
 
-    // Registrar nuevo lugar si corresponde
     if (lugar === "__NUEVO__") {
         const inputNuevo = document.getElementById("roboLugarNuevo");
         const nuevoLugar = inputNuevo ? inputNuevo.value.trim() : "";
@@ -292,25 +288,22 @@ function generarReporteRobo(){
         let listaLugares = obtenerLugaresGuardados();
         if (!listaLugares.includes(nuevoLugar)) {
             listaLugares.push(nuevoLugar);
-            listaLugares.sort(); // Mantener orden alfabético
+            listaLugares.sort();
             localStorage.setItem("lista_lugares_robo", JSON.stringify(listaLugares));
         }
 
         lugar = nuevoLugar;
         localStorage.setItem("ultimo_lugar_robo", lugar);
 
-        inputNuevo.value = "";
+        if(inputNuevo) inputNuevo.value = "";
         actualizarSelectLugares(lugar);
-        document.getElementById("roboLugarSelect").value = "";
     }
 
     if (!lugar) {
         lugar = "[Lugar]";
     }
 
-    // NUEVO: Lee el tipo de robo seleccionado arriba (487 o 488)
     const tipoRobo = document.getElementById("roboTipoCodigo").value;
-
     const vehiculo = document.getElementById("roboVehiculo").value || "[Vehículo]";
     const color = document.getElementById("roboColor").value || "[Color]";
     const patente = (document.getElementById("roboPatente").value || "[Patente]").toUpperCase();
@@ -319,13 +312,11 @@ function generarReporteRobo(){
     const vestimenta = document.getElementById("roboVestimenta").value || "[Vestimenta]";
     const armas = document.getElementById("roboArmas").value || "[Armamento]";
 
-    // Construye el mensaje con el tipo de robo dinámico (487 o 488)
     const mensaje = `/r 10-97 al ${tipoRobo} del lugar ${lugar} | V: ${vehiculo} C: ${color} Matricula: ${patente} COD-37 | Atracadores: ${atracadores} Vestimenta: ${vestimenta} Portan: ${armas} | Rehenes: ${rehenes}`;
     
     mostrarVistaPrevia(mensaje);
     copiarMensaje(mensaje);
 
-    // Limpieza de campos tras el despacho
     document.getElementById("roboVehiculo").value = "";
     document.getElementById("roboColor").value = "";
     document.getElementById("roboPatente").value = "";
@@ -334,299 +325,27 @@ function generarReporteRobo(){
     document.getElementById("roboVestimenta").value = "";
     document.getElementById("roboArmas").value = "";
     if(selectLugar) selectLugar.value = "";
-}
-
-function generarPatrullaje(){
-    const unidad = document.getElementById("patUnidad").value;
-    const oficial1 = document.getElementById("patOficial1").value;
-    const oficial2 = document.getElementById("patOficial2").value;
-    const ubicacion = document.getElementById("patUbicacion").value || "Comisaría Central";
-
-    if(!unidad || !oficial1) return alert("Faltan datos obligatorios.");
-
-    const calculoDotacion = oficial2.trim() !== "" ? 2 : 1;
-    localStorage.setItem(unidad + "_estado", "true");
-    localStorage.setItem(unidad + "_dotacion", calculoDotacion);
-    renderizarPatrullas();
-
-    const oficialesTexto = oficial2 ? `${oficial1} y ${oficial2}` : oficial1;
-    const mensaje = `/r ${unidad} conformado por ${oficialesTexto}, inician 10-33 desde ${ubicacion}, Good Service.`;
-    mostrarVistaPrevia(mensaje);
-}
-
-function generarSAMS(tipoPaciente){
-    const elPaciente = document.getElementById("estadoPaciente");
-    const estado = elPaciente ? elPaciente.value : "Estable";
-    const stringPaciente = tipoPaciente === "agente" ? "un agente" : "un sujeto";
-
-    const mensaje = `/rff Solicitamos un Alfa en nuestro 10-20 para tratar a ${stringPaciente} en estado ${estado}`;
-    mostrarVistaPrevia(mensaje);
-    copiarMensaje(mensaje);
-}    
-function solicitarCopiaSAMS() {
-    const mensaje = "/rff SAMS me Copia?";
-    mostrarVistaPrevia(mensaje);
-    copiarMensaje(mensaje);
-}
-
-function generarIncautados(){
-    const nombre = document.getElementById("incautadoNombre").value || "[Sujeto]";
-    const objetos = document.getElementById("incautadoObjetos").value || "[Objetos]";
-    const selectOficial = document.getElementById("incautadoOficialSelect");
-    let oficial = selectOficial ? selectOficial.value : "";
-
-    // Lógica para registrar un oficial nuevo si está seleccionado
-    if (oficial === "__NUEVO__") {
-        const inputNuevo = document.getElementById("incautadoOficialNuevo");
-        const nuevoNombre = inputNuevo ? inputNuevo.value.trim() : "";
-
-        if (!nuevoNombre) {
-            return alert("Por favor, escribe el nombre del nuevo oficial.");
-        }
-
-        let listaOficiales = obtenerOficialesGuardados();
-        if (!listaOficiales.includes(nuevoNombre)) {
-            listaOficiales.push(nuevoNombre);
-            listaOficiales.sort(); 
-            localStorage.setItem("lista_oficiales_incautadores", JSON.stringify(listaOficiales));
-        }
-
-        oficial = nuevoNombre;
-        localStorage.setItem("ultimo_oficial_incautador", oficial);
-        
-        inputNuevo.value = "";
-        actualizarSelectOficiales(oficial);
-    }
-
-    if (!oficial) {
-        oficial = "[Oficial]";
-    }
-
-    const mensaje = `/r ${nombre} | ${objetos} | Procesado por: ${oficial}`;
-    mostrarVistaPrevia(mensaje);
-    copiarMensaje(mensaje);
-}
-
-/* ========================================= */
-/* GENERADORES DE ANUNCIOS LSPD (CIUDADANÍA) */
-/* ========================================= */
-function generarAnuncioDisponibles() {
-    const oficiales = document.getElementById("oficialesDisponibles").innerText || "0";
-    const idUsuario = document.getElementById("anuncioId").value;
-
-    if (!idUsuario || idUsuario < 1 || idUsuario > 100) {
-        return alert("Por favor, ingresa un ID válido entre 1 y 100 antes de generar el mensaje.");
-    }
-
-    const mensaje = `/lspd Se informa que se encuentran ${oficiales} oficiales disponibles para la ciudadania ID: ${idUsuario}`;
-    
-    mostrarVistaPrevia(mensaje);
-    copiarMensaje(mensaje);
-}
-
-function generarAnuncioNoDisponibles() {
-    const mensaje = `/lspd Se informa que no se encuentran oficiales disponibles en este momento`;
-    
-    mostrarVistaPrevia(mensaje);
-    copiarMensaje(mensaje);
-}
-
-/* ========================================= */
-/* ACCIONES RÁPIDAS (CLAVES RADIALES - SEPARADO) */
-/* ========================================= */
-
-// Leen el selector "codigoEvento" del segundo panel independiente
-function generarCodigo4(){
-    const codigo = document.getElementById("codigoEvento").value;
-    const mensaje = `/r 10-98 del ${codigo} | Cod.4`;
-    mostrarVistaPrevia(mensaje);
-    copiarMensaje(mensaje);
-}
-
-// Leen el selector "codigoEvento" del segundo panel independiente
-function generarSinExito(){
-    const codigo = document.getElementById("codigoEvento").value;
-    const mensaje = `/r 10-98 al último ${codigo}, sin éxito | Procedemos con 10-22`;
-    mostrarVistaPrevia(mensaje);
-    copiarMensaje(mensaje);
-}
-
-// Leen el selector "codigoEvento" del segundo panel independiente
-function generarRetomar(){
-    const codigo = document.getElementById("codigoEvento").value;
-    const mensaje = `/r 10-98 del último ${codigo} | Retomamos 10-33`;
-    mostrarVistaPrevia(mensaje);
-    copiarMensaje(mensaje);
-}
-/* ========================================= */
-/* LÓGICA DE NEGOCIACIONES CON HORA REAL */
-/* ========================================= */
-function toggleDetalleNegociacion() {
-    const lugar = document.getElementById('lugarNegociacion');
-    const detalle = document.getElementById('detalleNegociacion');
-    if(!lugar || !detalle) return;
-
-    const condicionales = ["24/7", "LTD", "Ammu-Nation", "Robo a Casa"];
-    detalle.style.display = condicionales.includes(lugar.value) ? "block" : "none";
-}
-
-function generarNegociacion(tipoAccion){
-    const lugar = document.getElementById("lugarNegociacion").value;
-    const detalle = document.getElementById("detalleNegociacion").value;
-    
-    if(!lugar) return alert("Debe seleccionar un robo de la lista.");
-
-    const ahora = new Date();
-    const horaExacta = String(ahora.getHours()).padStart(2, '0') + ":" + String(ahora.getMinutes()).padStart(2, '0');
-    
-    const textoAccion = tipoAccion === "termino" ? "termino" : "corte";
-    const condicionales = ["24/7", "LTD", "Ammu-Nation", "Robo a Casa"];
-
-    let mensaje = "";
-    if (condicionales.includes(lugar)) {
-        mensaje = `/lspd Se informa el ${textoAccion} de negociaciones en ${lugar} de ${detalle || '[Especificar]'} a las ${horaExacta}`;
-    } else {
-        mensaje = `/lspd Se informa el ${textoAccion} de negociaciones en ${lugar} a las ${horaExacta}`;
-    }
-
-    mostrarVistaPrevia(mensaje);
-    copiarMensaje(mensaje);
-}
-
-function generarAnuncioGo(){
-    const lugar = document.getElementById("lugarNegociacion").value;
-    
-    if(!lugar) return alert("Debe seleccionar un robo de la lista antes de enviar el GO.");
-
-    // Estructura el mensaje final con el lugar seleccionado
-    const mensaje = `/lspd GO ${lugar}`;
-
-    mostrarVistaPrevia(mensaje);
-    copiarMensaje(mensaje);
-}
-
-
-// ========================================================
-// SISTEMA DE LISTADOS DINÁMICOS PARA INICIO DE PATRULLA
-// ========================================================
-
-function actualizarSelectOficialesPatrulla(numeroOficial, seleccionarOficial = "") {
-    const select = document.getElementById(`patOficial${numeroOficial}Select`);
-    if (!select) return;
-
-    // Comparte la misma lista de oficiales que usas en incautaciones
-    const oficiales = JSON.parse(localStorage.getItem("lista_oficiales_incautadores")) || ["Eduardo Vinicius"];
-    
-    let html = `<option value="">👮‍♂️ Seleccionar Oficial ${numeroOficial} ${numeroOficial === 2 ? '(Opcional)' : ''}</option>`;
-    oficiales.forEach(oficial => {
-        html += `<option value="${oficial}" ${oficial === seleccionarOficial ? "selected" : ""}>🔹 ${oficial}</option>`;
-    });
-    html += `<option value="__NUEVO__">✍️ Agregar nuevo oficial...</option>`;
-
-    select.innerHTML = html;
-    verificarNuevoOficialPatrulla(numeroOficial);
-}
-
-function verificarNuevoOficialPatrulla(numeroOficial) {
-    const select = document.getElementById(`patOficial${numeroOficial}Select`);
-    const inputNuevo = document.getElementById(`patOficial${numeroOficial}Nuevo`);
-    if (select && inputNuevo) {
-        inputNuevo.style.display = select.value === "__NUEVO__" ? "block" : "none";
-    }
-}
-
-function actualizarSelectLugaresPatrulla(seleccionarLugar = "") {
-    const select = document.getElementById("patUbicacionSelect");
-    if (!select) return;
-
-    // Comparte la misma lista de ubicaciones que usas en los robos
-    const lugares = JSON.parse(localStorage.getItem("lista_ubicaciones_patrulla")) || ["15va Comisaria de Vinewood"];
-    const seleccionado = seleccionarLugar || "";
-
-    let html = '<option value="">🗺️ Seleccionar Ubicación / Base</option>';
-    lugares.forEach(lug => {
-        html += `<option value="${lug}" ${lug === seleccionarLugar ? "selected" : ""}>📍 ${lug}</option>`;
-    });
-    html += '<option value="__NUEVO__">✍️ Agregar nueva ubicación...</option>';
-
-    select.innerHTML = html;
-    verificarNuevoLugarPatrulla();
-}
-
-function verificarNuevoLugarPatrulla() {
-    const select = document.getElementById("patUbicacionSelect");
-    const inputNuevo = document.getElementById("patUbicacionNuevo");
-    if (select && inputNuevo) {
-        inputNuevo.style.display = select.value === "__NUEVO__" ? "block" : "none";
-    }
+    verificarNuevoLugar();
 }
 
 function generarPatrullaje() {
     const unidad = document.getElementById("patUnidad").value || "[Unidad]";
     
-    // --- Procesar Oficial 1 ---
     const selectOf1 = document.getElementById("patOficial1Select");
     let oficial1 = selectOf1 ? selectOf1.value : "";
     if (oficial1 === "__NUEVO__") {
         const nuevoOf1 = document.getElementById("patOficial1Nuevo").value.trim();
         if (!nuevoOf1) return alert("Por favor, escribe el nombre del Oficial 1.");
         
-        let lista = JSON.parse(localStorage.getItem("lista_oficiales_incautadores")) || ["Eduardo Vinicius"];
+        let lista = obtenerOficialesGuardados();
         if (!lista.includes(nuevoOf1)) {
             lista.push(nuevoOf1);
             lista.sort();
             localStorage.setItem("lista_oficiales_incautadores", JSON.stringify(lista));
-            if(typeof actualizarSelectOficiales === 'function') actualizarSelectOficiales();
+            actualizarSelectOficiales();
         }
         oficial1 = nuevoOf1;
     }
 
-    // --- Procesar Oficial 2 ---
     const selectOf2 = document.getElementById("patOficial2Select");
-    let oficial2 = selectOf2 ? selectOf2.value : "";
-    if (oficial2 === "__NUEVO__") {
-        const nuevoOf2 = document.getElementById("patOficial2Nuevo").value.trim();
-        if (!nuevoOf2) return alert("Por favor, escribe el nombre del Oficial 2.");
-        
-        let lista = JSON.parse(localStorage.getItem("lista_oficiales_incautadores")) || ["Eduardo Vinicius"];
-        if (!lista.includes(nuevoOf2)) {
-            lista.push(nuevoOf2);
-            lista.sort();
-            localStorage.setItem("lista_oficiales_incautadores", JSON.stringify(lista));
-            if(typeof actualizarSelectOficiales === 'function') actualizarSelectOficiales();
-        }
-        oficial2 = nuevoOf2;
-    }
-
-    // --- Procesar Ubicación ---
-    const selectUbi = document.getElementById("patUbicacionSelect");
-    let ubicacion = selectUbi ? selectUbi.value : "";
-    if (ubicacion === "__NUEVO__") {
-        const nuevaUbi = document.getElementById("patUbicacionNuevo").value.trim();
-        if (!nuevaUbi) return alert("Por favor, escribe la nueva ubicación.");
-        
-        let lista = JSON.parse(localStorage.getItem("lista_lugares_robo")) || ["Joyería Vangelico"];
-        if (!lista.includes(nuevaUbi)) {
-            lista.push(nuevaUbi);
-            lista.sort();
-            localStorage.setItem("lista_lugares_robo", JSON.stringify(lista));
-            if(typeof actualizarSelectLugares === 'function') actualizarSelectLugares();
-        }
-        ubicacion = nuevaUbi;
-    }
-
-    if (!oficial1) return alert("Debe seleccionar al menos el Oficial de mayor rango.");
-    if (!ubicacion) return alert("Debe seleccionar una ubicación de inicio.");
-
-    const oficialesMensaje = oficial2 ? `${oficial1} | ${oficial2}` : oficial1;
-    const mensaje = `/r Unidad ${unidad} constituida por: ${oficialesMensaje} inicia patrullaje en ${ubicacion} | Good Service.`;
-    
-    mostrarVistaPrevia(mensaje);
-    copiarMensaje(mensaje);
-
-    // Resetear formulario
-    document.getElementById("patUnidad").value = "";
-    actualizarSelectOficialesPatrulla(1, "");
-    actualizarSelectOficialesPatrulla(2, "");
-    actualizarSelectLugaresPatrulla("");
-}
+    let
