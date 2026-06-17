@@ -45,13 +45,24 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarReloj();
     renderizarPatrullas();
     toggleDetalleNegociacion();
+    
+    // Inicializar selectores de Incautaciones y Robos
+    actualizarSelectOficial(); 
+    actualizarSelectLugares(); 
+
+    // CORRECCIÓN: Inicializar selectores de Patrulla con sus respectivos listeners
     actualizarSelectOficialesPatrulla(1);
     actualizarSelectOficialesPatrulla(2);
     actualizarSelectLugaresPatrulla();
-  
-    // Inicializar selectores dinámicos
-    actualizarSelectOficiales(); 
-    actualizarSelectLugares(); 
+
+    const selectPatOf1 = document.getElementById("patOficial1Select");
+    if(selectPatOf1) selectPatOf1.addEventListener("change", () => verificarNuevoOficialPatrulla(1));
+
+    const selectPatOf2 = document.getElementById("patOficial2Select");
+    if(selectPatOf2) selectPatOf2.addEventListener("change", () => verificarNuevoOficialPatrulla(2));
+
+    const selectPatUbi = document.getElementById("patUbicacionSelect");
+    if(selectPatUbi) selectPatUbi.addEventListener("change", verificarNuevoLugarPatrulla);
 
     // Inicializar acordeón del manual
     const botonesAcordeon = document.querySelectorAll(".acordeon-btn");
@@ -193,7 +204,7 @@ function obtenerOficialesGuardados() {
     return lista ? JSON.parse(lista) : ["Eduardo Vinicius"];
 }
 
-function actualizarSelectOficiales(seleccionarNombre = "") {
+function actualizarSelectOficial(seleccionarNombre = "") {
     const select = document.getElementById("incautadoOficialSelect");
     if (!select) return;
 
@@ -202,7 +213,7 @@ function actualizarSelectOficiales(seleccionarNombre = "") {
 
     let html = '<option value="">-- Selecciona Oficial que Procesa --</option>';
     oficiales.forEach(ofi => {
-        html += `<option value="${ofi}" ${ofi === ultimoSeleccionado ? "selected" : ""}>👮‍♂️ ${ofi}</option>';
+        html += `<option value="${ofi}" ${ofi === ultimoSeleccionado ? "selected" : ""}>👮‍♂️ ${ofi}</option>`;
     });
     html += '<option value="__NUEVO__">✍️ Agregar nuevo oficial...</option>';
     
@@ -366,7 +377,7 @@ function generarIncautados(){
         localStorage.setItem("ultimo_oficial_incautador", oficial);
         
         if(inputNuevo) inputNuevo.value = "";
-        actualizarSelectOficiales(oficial);
+        actualizarSelectOficial(oficial);
     }
 
     if (!oficial) {
@@ -474,17 +485,15 @@ function generarAnuncioGo(){
 /* SISTEMA DE LISTADOS DINÁMICOS PARA INICIO DE PATRULLA    */
 /* ======================================================== */
 
-// NUEVO: Función para obtener de manera exclusiva la lista de oficiales de patrulla
 function obtenerOficialesPatrullaGuardados() {
     const lista = localStorage.getItem("lista_oficiales_patrulla");
-    return lista ? JSON.parse(lista) : ["Eduardo Vinicius"]; // Mantiene el nombre inicial por defecto si está vacío
+    return lista ? JSON.parse(lista) : ["Eduardo Vinicius"]; 
 }
 
 function actualizarSelectOficialesPatrulla(numeroOficial, seleccionarOficial = "") {
     const select = document.getElementById(`patOficial${numeroOficial}Select`);
     if (!select) return;
 
-    // MODIFICADO: Ahora lee exclusivamente de la lista de patrullas
     const oficiales = obtenerOficialesPatrullaGuardados();
     
     let html = `<option value="">👮‍♂️ Seleccionar Oficial ${numeroOficial} ${numeroOficial === 2 ? '(Opcional)' : ''}</option>`;
@@ -502,6 +511,7 @@ function verificarNuevoOficialPatrulla(numeroOficial) {
     const inputNuevo = document.getElementById(`patOficial${numeroOficial}Nuevo`);
     if (select && inputNuevo) {
         inputNuevo.style.display = select.value === "__NUEVO__" ? "block" : "none";
+        if(select.value === "__NUEVO__") inputNuevo.focus();
     }
 }
 
@@ -527,6 +537,7 @@ function verificarNuevoLugarPatrulla() {
     const inputNuevo = document.getElementById("patUbicacionNuevo");
     if (select && inputNuevo) {
         inputNuevo.style.display = select.value === "__NUEVO__" ? "block" : "none";
+        if(select.value === "__NUEVO__") inputNuevo.focus();
     }
 }
 
@@ -540,16 +551,11 @@ function generarPatrullaje() {
         const nuevoOf1 = document.getElementById("patOficial1Nuevo").value.trim();
         if (!nuevoOf1) return alert("Por favor, escribe el nombre del Oficial 1.");
         
-        // MODIFICADO: Registra de manera independiente en la lista de patrullas
         let lista = obtenerOficialesPatrullaGuardados();
         if (!lista.includes(nuevoOf1)) {
             lista.push(nuevoOf1);
             lista.sort();
             localStorage.setItem("lista_oficiales_patrulla", JSON.stringify(lista));
-            
-            // Refresca los selects del panel de patrulla sin alterar incautaciones
-            actualizarSelectOficialesPatrulla(1, nuevoOf1);
-            actualizarSelectOficialesPatrulla(2, document.getElementById("patOficial2Select").value);
         }
         oficial1 = nuevoOf1;
     }
@@ -561,16 +567,11 @@ function generarPatrullaje() {
         const nuevoOf2 = document.getElementById("patOficial2Nuevo").value.trim();
         if (!nuevoOf2) return alert("Por favor, escribe el nombre del Oficial 2.");
         
-        // MODIFICADO: Registra de manera independiente en la lista de patrullas
         let lista = obtenerOficialesPatrullaGuardados();
         if (!lista.includes(nuevoOf2)) {
             lista.push(nuevoOf2);
             lista.sort();
             localStorage.setItem("lista_oficiales_patrulla", JSON.stringify(lista));
-            
-            // Refresca los selects del panel de patrulla sin alterar incautaciones
-            actualizarSelectOficialesPatrulla(1, document.getElementById("patOficial1Select").value);
-            actualizarSelectOficialesPatrulla(2, nuevoOf2);
         }
         oficial2 = nuevoOf2;
     }
@@ -587,7 +588,6 @@ function generarPatrullaje() {
             lista.push(nuevaUbi);
             lista.sort();
             localStorage.setItem("lista_ubicaciones_patrulla", JSON.stringify(lista));
-            actualizarSelectLugaresPatrulla(nuevaUbi);
         }
         ubicacion = nuevaUbi;
     }
@@ -606,8 +606,18 @@ function generarPatrullaje() {
     localStorage.setItem(unidad + "_dotacion", calculoDotacion);
     renderizarPatrullas();
 
-    document.getElementById("patUnidad").value = "";
+    // Refrescar selectores de patrulla tras el envío
     actualizarSelectOficialesPatrulla(1, "");
     actualizarSelectOficialesPatrulla(2, "");
     actualizarSelectLugaresPatrulla("");
+    document.getElementById("patUnidad").value = "";
+}
+
+// NUEVO: Función integrada para limpiar la lista de patrullas cuando quieras
+function reiniciarOficialesPatrulla() {
+    if (!confirm("¿Estás seguro de que deseas borrar todos los oficiales registrados en patrulla?")) return;
+    localStorage.removeItem("lista_oficiales_patrulla");
+    actualizarSelectOficialesPatrulla(1, "");
+    actualizarSelectOficialesPatrulla(2, "");
+    alert("Lista de oficiales de patrulla reiniciada.");
 }
